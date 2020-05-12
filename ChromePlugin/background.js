@@ -5,20 +5,20 @@ This plugin was based on https://github.com/google/page-timer/ with Apache Licen
 // history should be an array of objects.
 // History contaings History[tabId][0][0] = StartDate History[tabId][0][1] = URL
 var History = {};
+var EncriptionService = new EncriptionService();
 
 
 // Initialize the badge on the chrome plugin icon that shows on the right.
-chrome.browserAction.setBadgeText({ 'text': '?'});
+chrome.browserAction.setBadgeText({ 'text': '?' });
 chrome.browserAction.setBadgeBackgroundColor({ 'color': "#777" });
 
 function SendDataToServer() {
-
   var xhr = new XMLHttpRequest();
   var url = config.api.Url;
   xhr.open("POST", url, true);
   xhr.setRequestHeader("Content-Type", "application/json");
-  
-  // MVP: For now we eill ingore the response.
+
+  // MVP: For now we will ingore the response.
   // xhr.onreadystatechange = function () {
   //   if (xhr.readyState === 4 && xhr.status === 200) {
   //       // var json = JSON.parse(xhr.responseText);
@@ -26,11 +26,19 @@ function SendDataToServer() {
   //   }
   //   console.log(xhr);
   // };
-  var data = {"email": "hey@mail.com", "password": "101010"};
-  var jsonPayload = JSON.stringify(data);
-  // TODO: Encrypt content before sending to API endpoint.
-  //CryptoJS.AES.encrypt(jsonPayload,config.jsonEncryptionKey);
-  xhr.send(jsonPayload);
+  let data = { "email": "hey@mail.com", "password": "101010" };
+  let jsonPayload = JSON.stringify(data);
+  EncriptionService.encrypt(jsonPayload, config.jsonEncryptionKey)
+    .then(encrypted => {
+      console.log("encrypted", encrypted); // { cipherText: Uint8Array, iv: Uint8Array }
+      xhr.send(JSON.stringify(encrypted));
+
+      // EncriptionService.decrypt(encrypted, config.jsonEncryptionKey)
+      //   .then(decrypted => {
+      //     console.log("decrypted:", decrypted); // { cipherText: Uint8Array, iv: Uint8Array }
+      //   });
+
+    });
 }
 
 function FormatDuration(d) {
@@ -52,11 +60,11 @@ function Update(dateTime, tabId, url) {
 
   // Clean History so it doesnt explode =)
   var history_limit = parseInt(localStorage["history_size"]);
-  if (! history_limit) { history_limit = 23; }
+  if (!history_limit) { history_limit = 23; }
   while (History[tabId].length > history_limit) { History[tabId].pop(); }
 
-  chrome.browserAction.setBadgeText({ 'tabId': tabId, 'text': '0:00'});
-  chrome.browserAction.setPopup({ 'tabId': tabId, 'popup': "popup.html#tabId=" + tabId});
+  chrome.browserAction.setBadgeText({ 'tabId': tabId, 'text': '0:00' });
+  chrome.browserAction.setPopup({ 'tabId': tabId, 'popup': "popup.html#tabId=" + tabId });
 
   SendDataToServer();
 }
@@ -72,7 +80,7 @@ function HandleRemove(tabId, removeInfo) {
 function HandleReplace(addedTabId, removedTabId) {
   var t = new Date();
   delete History[removedTabId];
-  chrome.tabs.get(addedTabId, function(tab) {
+  chrome.tabs.get(addedTabId, function (tab) {
     Update(t, addedTabId, tab.url);
   });
 }
@@ -81,7 +89,7 @@ function UpdateBadges() {
   var now = new Date();
   for (tabId in History) {
     var description = FormatDuration(now - History[tabId][0][0]);
-    chrome.browserAction.setBadgeText({ 'tabId': parseInt(tabId), 'text': description});
+    chrome.browserAction.setBadgeText({ 'tabId': parseInt(tabId), 'text': description });
   }
 }
 
