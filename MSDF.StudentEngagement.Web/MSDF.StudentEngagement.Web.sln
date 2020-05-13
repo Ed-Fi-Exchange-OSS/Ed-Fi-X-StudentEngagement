@@ -5,6 +5,10 @@ VisualStudioVersion = 16.0.29326.143
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSDF.StudentEngagement.Web", "MSDF.StudentEngagement.Web\MSDF.StudentEngagement.Web.csproj", "{5429836A-A436-4A30-B210-A987382B4B6A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSDF.StudentEngagement.Resources", "MSDF.StudentEngagement.Resources\MSDF.StudentEngagement.Resources.csproj", "{85F3001F-4207-4CE4-A547-1EC74007C9ED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSDF.StudentEngagement.Persistence", "MSDF.StudentEngagement.Persistence\MSDF.StudentEngagement.Persistence.csproj", "{BAC95A0E-688D-48F2-8AF2-12FE0223CD32}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{5429836A-A436-4A30-B210-A987382B4B6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5429836A-A436-4A30-B210-A987382B4B6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5429836A-A436-4A30-B210-A987382B4B6A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{85F3001F-4207-4CE4-A547-1EC74007C9ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{85F3001F-4207-4CE4-A547-1EC74007C9ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{85F3001F-4207-4CE4-A547-1EC74007C9ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{85F3001F-4207-4CE4-A547-1EC74007C9ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BAC95A0E-688D-48F2-8AF2-12FE0223CD32}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BAC95A0E-688D-48F2-8AF2-12FE0223CD32}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BAC95A0E-688D-48F2-8AF2-12FE0223CD32}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BAC95A0E-688D-48F2-8AF2-12FE0223CD32}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

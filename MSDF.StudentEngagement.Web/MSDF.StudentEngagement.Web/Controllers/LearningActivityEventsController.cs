@@ -8,17 +8,12 @@ using Microsoft.Extensions.Logging;
 namespace MSDF.StudentEngagement.Web.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
-    public class WeatherForecastController : ControllerBase
+    [Route("api/[controller]")]
+    public class LearningActivityEventsController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
+        private readonly ILogger<LearningActivityEventsController> _logger;
 
-        private readonly ILogger<WeatherForecastController> _logger;
-
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        public LearningActivityEventsController(ILogger<LearningActivityEventsController> logger)
         {
             _logger = logger;
         }
@@ -31,9 +26,20 @@ namespace MSDF.StudentEngagement.Web.Controllers
             {
                 Date = DateTime.Now.AddDays(index),
                 TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
             })
             .ToArray();
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Post(string encryptedPayload)
+        {
+            //TODO: Validate encryptedPayload by trying to decrypt payload into final request model.
+            //if (encryptedPayload is NOT valid)
+            //    return BadRequest("Invalid string");
+
+            // Save to log.
+
+            return Ok();
         }
     }
 }
