@@ -5,7 +5,7 @@ This plugin was based on https://github.com/google/page-timer/ with Apache Licen
 // history should be an array of objects.
 // History contaings History[tabId][0][0] = StartDate History[tabId][0][1] = URL
 var History = {};
-var EncriptionService = new EncriptionService();
+var EncryptionService = new EncryptionService();
 
 
 // Initialize the badge on the chrome plugin icon that shows on the right.
@@ -26,18 +26,19 @@ function SendDataToServer() {
   //   }
   //   console.log(xhr);
   // };
-  let data = { "email": "hey@mail.com", "password": "101010" };
+
+  let data = { 
+    /* string */ IdentityEmailAddress : "",
+    /* string */ ReffererUrl : "",
+    /* string */ LeaningAppUrl : "",
+    /* DateTime */ UTCDateTimeStart : new Date()
+   };
+  
+
   let jsonPayload = JSON.stringify(data);
-  EncriptionService.encrypt(jsonPayload, config.jsonEncryptionKey)
+  EncryptionService.encrypt(jsonPayload, config.encryptionExportedKey)
     .then(encrypted => {
-      console.log("encrypted", encrypted); // { cipherText: Uint8Array, iv: Uint8Array }
       xhr.send(JSON.stringify(encrypted));
-
-      // EncriptionService.decrypt(encrypted, config.jsonEncryptionKey)
-      //   .then(decrypted => {
-      //     console.log("decrypted:", decrypted); // { cipherText: Uint8Array, iv: Uint8Array }
-      //   });
-
     });
 }
 
@@ -48,7 +49,7 @@ function FormatDuration(d) {
   return Math.floor(d / divisor[0]) + ":" + pad(Math.floor((d % divisor[0]) / divisor[1]));
 }
 
-function Update(dateTime, tabId, url) {
+function Update(dateTime, tabId, url, reffererUrl) {
   if (!url) { return; }
   //alert(url);
   if (tabId in History) {
@@ -66,11 +67,18 @@ function Update(dateTime, tabId, url) {
   chrome.browserAction.setBadgeText({ 'tabId': tabId, 'text': '0:00' });
   chrome.browserAction.setPopup({ 'tabId': tabId, 'popup': "popup.html#tabId=" + tabId });
 
-  SendDataToServer();
+  let updateData = { 
+    /* string */ identityEmailAddress : "",
+    /* string */ reffererUrl : reffererUrl,
+    /* string */ leaningAppUrl : url,
+    /* DateTime */ UTCDateTimeStart : dateTime
+   };
+
+  SendDataToServer(updateData);
 }
 
 function HandleUpdate(tabId, changeInfo, tab) {
-  Update(new Date(), tabId, changeInfo.url);
+  Update(new Date(), tabId, changeInfo.url, null);
 }
 
 function HandleRemove(tabId, removeInfo) {
@@ -81,7 +89,7 @@ function HandleReplace(addedTabId, removedTabId) {
   var t = new Date();
   delete History[removedTabId];
   chrome.tabs.get(addedTabId, function (tab) {
-    Update(t, addedTabId, tab.url);
+    Update(t, addedTabId, tab.url, null);
   });
 }
 

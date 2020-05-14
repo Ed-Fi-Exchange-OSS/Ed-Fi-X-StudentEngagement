@@ -16,7 +16,7 @@
     "default_icon": { "19": "browser-action-19.png", "38": "browser-action-38.png"}
   },
   "background": {
-    "scripts": [ "config.js", "encriptionService.js", "background.js" ],
+    "scripts": [ "config.js", "encryptionService.js", "background.js" ],
     "persistent": true
   },
   "options_page": "options.html"
