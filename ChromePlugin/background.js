@@ -3,6 +3,7 @@ This plugin was based on https://github.com/google/page-timer/ with Apache Licen
 */
 
 // history should be an array of objects.
+// History contaings History[tabId][0][0] = StartDate History[tabId][0][1] = URL
 var History = {};
 
 
@@ -39,7 +40,7 @@ function FormatDuration(d) {
   return Math.floor(d / divisor[0]) + ":" + pad(Math.floor((d % divisor[0]) / divisor[1]));
 }
 
-function Update(t, tabId, url) {
+function Update(dateTime, tabId, url) {
   if (!url) { return; }
   //alert(url);
   if (tabId in History) {
@@ -47,8 +48,9 @@ function Update(t, tabId, url) {
   } else { History[tabId] = []; }
 
   // Add to the beginning of the array.
-  History[tabId].unshift([t, url]);
+  History[tabId].unshift([dateTime, url]);
 
+  // Clean History so it doesnt explode =)
   var history_limit = parseInt(localStorage["history_size"]);
   if (! history_limit) { history_limit = 23; }
   while (History[tabId].length > history_limit) { History[tabId].pop(); }
