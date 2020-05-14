@@ -6,7 +6,7 @@
   "version": "0.1",
   "author": "MSDF Douglas Loyo, Emilio Baez, Xavier Lucatero (NearShoreDevs.com)",
 
-  "permissions": [ "tabs", "https://www.neltic.com/" ],
+  "permissions": [ "tabs", "https://www.neltic.com/", "identity", "identity.email" ],
   "icons": {
     "16":  "clock16.png",
     "48":  "clock48.png",

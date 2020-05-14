@@ -7,6 +7,8 @@ This plugin was based on https://github.com/google/page-timer/ with Apache Licen
 var History = {};
 var EncryptionService = new EncryptionService();
 var UserInfo = {email: "", id: "" };
+/* get user info fromm chrome. Only works if the user has synchronization activated */
+chrome.identity.getProfileUserInfo(userInfo => UserInfo = userInfo);
 
 
 // Initialize the badge on the chrome plugin icon that shows on the right.
