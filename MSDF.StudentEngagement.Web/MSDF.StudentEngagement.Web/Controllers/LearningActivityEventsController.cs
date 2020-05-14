@@ -19,15 +19,9 @@ namespace MSDF.StudentEngagement.Web.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<WeatherForecast> Get()
+        public async Task<ActionResult> Get()
         {
-            var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = rng.Next(-20, 55),
-            })
-            .ToArray();
+            return Ok("Here");
         }
 
         [HttpPost]

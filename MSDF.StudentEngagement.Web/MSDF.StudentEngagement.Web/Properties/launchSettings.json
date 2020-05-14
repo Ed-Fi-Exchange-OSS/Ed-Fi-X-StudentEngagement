@@ -1,7 +1,11 @@
 {
   "iisSettings": {
-    "windowsAuthentication": false,
+    "windowsAuthentication": true,
     "anonymousAuthentication": true,
+    "iis": {
+      "applicationUrl": "https://localhost/MSDF.StudentEngagement.Web",
+      "sslPort": 0
+    },
     "iisExpress": {
       "applicationUrl": "http://localhost:54084",
       "sslPort": 44364
@@ -26,6 +30,15 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "applicationUrl": "https://localhost:5001;http://localhost:5000"
+    },
+    "Local IIS": {
+      "commandName": "IIS",
+      "launchBrowser": true,
+      "launchUrl": "api/LearningActivityEvents",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "ancmHostingModel": "OutOfProcess"
     }
   }
 }

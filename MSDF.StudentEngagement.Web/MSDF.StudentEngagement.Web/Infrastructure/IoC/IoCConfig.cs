@@ -1,8 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 
 namespace MSDF.StudentEngagement.Web.Infrastructure.IoC
 {
@@ -19,8 +17,6 @@ namespace MSDF.StudentEngagement.Web.Infrastructure.IoC
 
         private static void RegisterProviders(IServiceCollection container)
         {
-            // Register the Token Validator
-            container.AddScoped<ITokenValidationProvider, GoogleTokenValidationProvider>();
         }
     }
 }

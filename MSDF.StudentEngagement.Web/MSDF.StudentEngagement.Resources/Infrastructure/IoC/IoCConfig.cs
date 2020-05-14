@@ -1,11 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
-using System.Threading.Tasks;
 
-namespace MSDF.StudentEngagement.Web.Infrastructure.IoC
+namespace MSDF.StudentEngagement.Resources.Infrastructure.IoC
 {
-    public class IoCConfig
+    public static class IoCConfig
     {
+        public static void RegisterDependencies(IServiceCollection container, IConfiguration configuration)
+        {
+            // Register persistence dependencies.
+            Persistence.Infrastructure.IoC.IoCConfig.RegisterDependencies(container, configuration);
+
+            // Register own dependencies.
+            RegisterServicesByConvention<IResourcesMarker>(container);
+        }
+
+        private static void RegisterServicesByConvention<TMarker>(IServiceCollection container)
+        {
+            var types = typeof(TMarker).Assembly.ExportedTypes;
+
+            var servicesToRegister = (
+                from interfaceType in types.Where(t => t.Name.StartsWith("I") && t.Name.EndsWith("Service"))
+                from serviceType in types.Where(t => t.Name == interfaceType.Name.Substring(1))
+                select new
+                {
+                    InterfaceType = interfaceType,
+                    ServiceType = serviceType
+                }
+            );
+
+            foreach (var pair in servicesToRegister)
+                container.AddScoped(pair.InterfaceType, pair.ServiceType);
+        }
     }
 }

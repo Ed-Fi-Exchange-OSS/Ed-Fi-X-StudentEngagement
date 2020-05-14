@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Numerics;
 using System.Text;
 
-namespace MSDF.StudentEngagement.Persistence.StudentLearningEventLog.Models
+namespace MSDF.StudentEngagement.Persistence.Models
 {
     public class StudentLearningEventLog
     {
