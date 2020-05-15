@@ -29,7 +29,7 @@ namespace MSDF.StudentEngagement.Persistence.Models
         public string LeaningAppUrl { get; set; }
         [Required]
         public DateTime UTCStartDate { get; set; }
-        public DateTime UTCEndDate { get; set; }
-        public int TimeSpent { get; set; }
+        public DateTime? UTCEndDate { get; set; }
+        public int? TimeSpent { get; set; }
     }
 }

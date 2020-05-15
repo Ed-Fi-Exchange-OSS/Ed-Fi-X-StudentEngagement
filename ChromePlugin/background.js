@@ -5,33 +5,51 @@ This plugin was based on https://github.com/google/page-timer/ with Apache Licen
 // history should be an array of objects.
 // History contaings History[tabId][0][0] = StartDate History[tabId][0][1] = URL
 var History = {};
+var EncryptionService = new EncryptionService();
+var UserInfo = {email: "", id: "" };
+/* get user info fromm chrome. Only works if the user has synchronization activated */
+chrome.identity.getProfileUserInfo(userInfo => UserInfo = userInfo);
 
 
 // Initialize the badge on the chrome plugin icon that shows on the right.
-chrome.browserAction.setBadgeText({ 'text': '?'});
+chrome.browserAction.setBadgeText({ 'text': '?' });
 chrome.browserAction.setBadgeBackgroundColor({ 'color': "#777" });
 
-function SendDataToServer() {
+/* ================= Send data ================*/
+const DataPointType = {
+  START: "start",
+  END: "end"
+}
 
+function getUsageData(tabId, index){
+  if(!History[tabId][index]) return null;
+
+  return { /*LearningActivityEventModel*/
+    /* string */ DataPointType: index == 0 ? DataPointType.START : DataPointType.END,
+    /* string */ IdentityElectronicMailAddress : UserInfo.email,
+    /* string */ ReffererUrl : "",
+    /* string */ LeaningAppUrl : History[tabId][index][1],
+    /* DateTime */ UTCStartDateTime : History[tabId][index][0],
+    /* DateTime */ UTCEndDateTime : index == 0 ? null : History[tabId][index - 1][0]
+   };
+}
+
+function SendDataToServer(data) {
   var xhr = new XMLHttpRequest();
   var url = config.api.Url;
   xhr.open("POST", url, true);
   xhr.setRequestHeader("Content-Type", "application/json");
-  
-  // MVP: For now we eill ingore the response.
-  // xhr.onreadystatechange = function () {
-  //   if (xhr.readyState === 4 && xhr.status === 200) {
-  //       // var json = JSON.parse(xhr.responseText);
-  //       // console.log(json.email + ", " + json.password); 
-  //   }
-  //   console.log(xhr);
-  // };
-  var data = {"email": "hey@mail.com", "password": "101010"};
-  var jsonPayload = JSON.stringify(data);
-  // TODO: Encrypt content before sending to API endpoint.
-  //CryptoJS.AES.encrypt(jsonPayload,config.jsonEncryptionKey);
-  xhr.send(jsonPayload);
+
+  // MVP: For now we will ingore the response.
+
+  let jsonPayload = JSON.stringify(data);
+  EncryptionService.encrypt(jsonPayload, config.encryptionExportedKey)
+    .then(encrypted => {
+      xhr.send(JSON.stringify(encrypted));
+    });
 }
+/* ============================================*/
+
 
 function FormatDuration(d) {
   if (d < 0) { return "?"; }
@@ -40,7 +58,7 @@ function FormatDuration(d) {
   return Math.floor(d / divisor[0]) + ":" + pad(Math.floor((d % divisor[0]) / divisor[1]));
 }
 
-function Update(dateTime, tabId, url) {
+function Update(dateTimeStart, tabId, url) {
   if (!url) { return; }
   //alert(url);
   if (tabId in History) {
@@ -48,18 +66,23 @@ function Update(dateTime, tabId, url) {
   } else { History[tabId] = []; }
 
   // Add to the beginning of the array.
-  History[tabId].unshift([dateTime, url]);
+  History[tabId].unshift([dateTimeStart, url]);
 
   // Clean History so it doesnt explode =)
   var history_limit = parseInt(localStorage["history_size"]);
-  if (! history_limit) { history_limit = 23; }
+  if (!history_limit) { history_limit = 23; }
   while (History[tabId].length > history_limit) { History[tabId].pop(); }
 
-  chrome.browserAction.setBadgeText({ 'tabId': tabId, 'text': '0:00'});
-  chrome.browserAction.setPopup({ 'tabId': tabId, 'popup': "popup.html#tabId=" + tabId});
+  chrome.browserAction.setBadgeText({ 'tabId': tabId, 'text': '0:00' });
+  chrome.browserAction.setPopup({ 'tabId': tabId, 'popup': "popup.html#tabId=" + tabId });
 
-  SendDataToServer();
+  /* Sends the new site data and the previous site, including end datetime */
+  let newURL = getUsageData(tabId, 0);
+  let previousURL = getUsageData(tabId, 1);
+  let usageData = previousURL != null ? [newURL, previousURL] : [newURL];
+  SendDataToServer(usageData);
 }
+
 
 function HandleUpdate(tabId, changeInfo, tab) {
   Update(new Date(), tabId, changeInfo.url);
@@ -70,10 +93,10 @@ function HandleRemove(tabId, removeInfo) {
 }
 
 function HandleReplace(addedTabId, removedTabId) {
-  var t = new Date();
+  var now = new Date();
   delete History[removedTabId];
-  chrome.tabs.get(addedTabId, function(tab) {
-    Update(t, addedTabId, tab.url);
+  chrome.tabs.get(addedTabId, function (tab) {
+    Update(now, addedTabId, tab.url);
   });
 }
 
@@ -81,7 +104,7 @@ function UpdateBadges() {
   var now = new Date();
   for (tabId in History) {
     var description = FormatDuration(now - History[tabId][0][0]);
-    chrome.browserAction.setBadgeText({ 'tabId': parseInt(tabId), 'text': description});
+    chrome.browserAction.setBadgeText({ 'tabId': parseInt(tabId), 'text': description });
   }
 }
 
