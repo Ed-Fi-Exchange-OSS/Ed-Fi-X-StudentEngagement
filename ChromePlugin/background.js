@@ -24,7 +24,7 @@ const DataPointType = {
 function getUsageData(tabId, index){
   if(!History[tabId][index]) return null;
 
-  return { 
+  return { /*LearningActivityEventModel*/
     /* string */ DataPointType: index == 0 ? DataPointType.START : DataPointType.END,
     /* string */ IdentityEmailAddress : UserInfo.email,
     /* string */ ReffererUrl : "",
@@ -58,7 +58,7 @@ function FormatDuration(d) {
   return Math.floor(d / divisor[0]) + ":" + pad(Math.floor((d % divisor[0]) / divisor[1]));
 }
 
-function Update(dateTimeStart, dateTimeEnd, tabId, url, reffererUrl) {
+function Update(dateTimeStart, tabId, url) {
   if (!url) { return; }
   //alert(url);
   if (tabId in History) {
@@ -77,15 +77,15 @@ function Update(dateTimeStart, dateTimeEnd, tabId, url, reffererUrl) {
   chrome.browserAction.setPopup({ 'tabId': tabId, 'popup': "popup.html#tabId=" + tabId });
 
   /* Sends the new site data and the previous site, including end datetime */
-  let newSite = getUsageData(tabId, 0);
-  let PreviousSite = getUsageData(tabId, 1);
-  let usageData = PreviousSite != null ? [newSite, PreviousSite] : [newSite];
+  let newURL = getUsageData(tabId, 0);
+  let previousURL = getUsageData(tabId, 1);
+  let usageData = previousURL != null ? [newURL, previousURL] : [newURL];
   SendDataToServer(usageData);
 }
 
 
 function HandleUpdate(tabId, changeInfo, tab) {
-  Update(new Date(), null, tabId, changeInfo.url, null);
+  Update(new Date(), tabId, changeInfo.url);
 }
 
 function HandleRemove(tabId, removeInfo) {
@@ -96,7 +96,7 @@ function HandleReplace(addedTabId, removedTabId) {
   var now = new Date();
   delete History[removedTabId];
   chrome.tabs.get(addedTabId, function (tab) {
-    Update(now, null, addedTabId, tab.url, null);
+    Update(now, addedTabId, tab.url);
   });
 }
 

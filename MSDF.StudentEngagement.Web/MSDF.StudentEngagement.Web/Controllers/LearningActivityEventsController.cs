@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using MSDF.StudentEngagement.Resources.Services.Encryption;
+using MSDF.StudentEngagement.Resources.Providers.Encryption;
 using MSDF.StudentEngagement.Resources.Services.LearningActivityEvents;
 
 namespace MSDF.StudentEngagement.Web.Controllers
@@ -15,17 +15,17 @@ namespace MSDF.StudentEngagement.Web.Controllers
     public class LearningActivityEventsController : ControllerBase
     {
         private readonly ILogger<LearningActivityEventsController> _logger;
-        private readonly IEncryptionService _encryptionService;
+        private readonly IEncryptionProvider _encryptionProvider;
         private readonly IConfiguration _configuration;
         private readonly ILearningActivityEventsService _learningActivityEventsService;
 
         public LearningActivityEventsController(ILogger<LearningActivityEventsController> logger
             , ILearningActivityEventsService learningActivityEventsService
-            , IEncryptionService encryptionService
+            , IEncryptionProvider encryptionProvider
             , IConfiguration configuration)
         {
             this._logger = logger;
-            this._encryptionService = encryptionService;
+            this._encryptionProvider = encryptionProvider;
             this._configuration = configuration;
             this._learningActivityEventsService = learningActivityEventsService;
         }
@@ -40,11 +40,9 @@ namespace MSDF.StudentEngagement.Web.Controllers
         public async Task<ActionResult> Post([FromBody]EncryptionModel encryptionModel)
         {
             //TODO: Validate encryptedPayload by trying to decrypt payload into final request model.
-            var decryptedData = _encryptionService.Decrypt(encryptionModel, _configuration["encryptionExportedKey"]);
-            if (decryptedData == null)
-            {
-                return BadRequest("Invalid string");
-            }
+            var decryptedData = _encryptionProvider.Decrypt(encryptionModel, _configuration["encryptionExportedKey"]);
+            if (decryptedData == null) { return BadRequest("Invalid string"); }
+
             IList<LearningActivityEventModel> learningActivityEventModelsList = 
                 Newtonsoft.Json.JsonConvert.DeserializeObject<IList<LearningActivityEventModel>>(decryptedData);
 

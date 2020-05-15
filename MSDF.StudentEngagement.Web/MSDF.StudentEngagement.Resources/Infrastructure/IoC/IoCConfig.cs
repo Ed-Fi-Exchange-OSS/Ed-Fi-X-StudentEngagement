@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MSDF.StudentEngagement.Resources.Providers.Encryption;
+using System;
 using System.Linq;
 
 namespace MSDF.StudentEngagement.Resources.Infrastructure.IoC
@@ -13,6 +15,14 @@ namespace MSDF.StudentEngagement.Resources.Infrastructure.IoC
 
             // Register own dependencies.
             RegisterServicesByConvention<IResourcesMarker>(container);
+
+            RegisterProviders(container);
+
+        }
+
+        private static void RegisterProviders(IServiceCollection container)
+        {
+            container.AddScoped(typeof(IEncryptionProvider), typeof(AESGCMEncryptionProvider));
         }
 
         private static void RegisterServicesByConvention<TMarker>(IServiceCollection container)

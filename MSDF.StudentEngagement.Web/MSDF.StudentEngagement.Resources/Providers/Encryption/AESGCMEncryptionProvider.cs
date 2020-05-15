@@ -7,15 +7,15 @@ using System.Text;
 using System.Text.Encodings.Web;
 using Newtonsoft.Json;
 
-namespace MSDF.StudentEngagement.Resources.Services.Encryption
+namespace MSDF.StudentEngagement.Resources.Providers.Encryption
 {
-    public interface IEncryptionService
+    public interface IEncryptionProvider
     {
         string Decrypt(string jsonEncryptionModel, string exportedKey);
         string Decrypt(EncryptionModel encryptionModel, string exportedKey);
     }
 
-    public class EncryptionService: IEncryptionService
+    public class AESGCMEncryptionProvider: IEncryptionProvider
     {
         const int TAG_LENGHT = 128;/* bits*/
         const int TAG_LENGHT_BYTES = TAG_LENGHT / 8;/* bytes*/

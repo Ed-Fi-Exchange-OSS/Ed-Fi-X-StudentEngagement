@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace MSDF.StudentEngagement.Resources.Services.Encryption
+namespace MSDF.StudentEngagement.Resources.Providers.Encryption
 {
     public class EncryptionModel
     {
