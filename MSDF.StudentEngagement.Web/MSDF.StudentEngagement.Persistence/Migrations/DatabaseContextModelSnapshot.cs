@@ -3,7 +3,6 @@ using System;
 using MSDF.StudentEngagement.Persistence.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MSDF.StudentEngagement.Persistence.Migrations
@@ -16,29 +15,28 @@ namespace MSDF.StudentEngagement.Persistence.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "3.1.4")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("MSDF.StudentEngagement.Persistence.Models.LearningApp", b =>
                 {
                     b.Property<string>("LearningAppIdentifier")
-                        .HasColumnType("nvarchar(60)")
+                        .HasColumnType("varchar(60)")
                         .HasMaxLength(60);
 
                     b.Property<string>("AppUrl")
-                        .HasColumnType("nvarchar(255)")
+                        .HasColumnType("varchar(255)")
                         .HasMaxLength(255);
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(1024)")
+                        .HasColumnType("varchar(1024)")
                         .HasMaxLength(1024);
 
                     b.Property<string>("Namespace")
-                        .HasColumnType("nvarchar(255)")
+                        .HasColumnType("varchar(255)")
                         .HasMaxLength(255);
 
                     b.Property<string>("Website")
-                        .HasColumnType("nvarchar(255)")
+                        .HasColumnType("varchar(255)")
                         .HasMaxLength(255);
 
                     b.HasKey("LearningAppIdentifier");
@@ -50,73 +48,72 @@ namespace MSDF.StudentEngagement.Persistence.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("BirthDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime");
 
                     b.Property<string>("BirthSexDescriptorCodeValue")
-                        .HasColumnType("nvarchar(50)")
+                        .HasColumnType("varchar(50)")
                         .HasMaxLength(50);
 
                     b.Property<string>("DeviceId")
-                        .HasColumnType("nvarchar(100)")
+                        .HasColumnType("varchar(100)")
                         .HasMaxLength(100);
 
                     b.Property<string>("DisabilityStatusDescriptorCodeValue")
-                        .HasColumnType("nvarchar(50)")
+                        .HasColumnType("varchar(50)")
                         .HasMaxLength(50);
 
                     b.Property<string>("ELLStatusDescriptorCodeValue")
-                        .HasColumnType("nvarchar(50)")
+                        .HasColumnType("varchar(50)")
                         .HasMaxLength(50);
 
                     b.Property<string>("EconomicallyDisadvantageDescriptorCodeValue")
-                        .HasColumnType("nvarchar(50)")
+                        .HasColumnType("varchar(50)")
                         .HasMaxLength(50);
 
                     b.Property<string>("Ethnicity")
-                        .HasColumnType("nvarchar(25)")
+                        .HasColumnType("varchar(25)")
                         .HasMaxLength(25);
 
                     b.Property<DateTime>("ExitWithdrawalDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime");
 
                     b.Property<string>("F504DescriptorCodeValue")
-                        .HasColumnType("nvarchar(50)")
+                        .HasColumnType("varchar(50)")
                         .HasMaxLength(50);
 
                     b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(75)")
+                        .HasColumnType("varchar(75)")
                         .HasMaxLength(75);
 
                     b.Property<string>("FosterDescriptorCodeValue")
-                        .HasColumnType("nvarchar(50)")
+                        .HasColumnType("varchar(50)")
                         .HasMaxLength(50);
 
                     b.Property<string>("HomelessDescriptorCodeValue")
-                        .HasColumnType("nvarchar(50)")
+                        .HasColumnType("varchar(50)")
                         .HasMaxLength(50);
 
                     b.Property<string>("IdentityElectronicMailAddress")
-                        .HasColumnType("nvarchar(60)")
+                        .HasColumnType("varchar(60)")
                         .HasMaxLength(60);
 
                     b.Property<string>("LastSurname")
-                        .HasColumnType("nvarchar(75)")
+                        .HasColumnType("varchar(75)")
                         .HasMaxLength(75);
 
                     b.Property<string>("LocalEducationAgencyName")
-                        .HasColumnType("nvarchar(75)")
+                        .HasColumnType("varchar(75)")
                         .HasMaxLength(75);
 
                     b.Property<string>("MiddleName")
-                        .HasColumnType("nvarchar(75)")
+                        .HasColumnType("varchar(75)")
                         .HasMaxLength(75);
 
                     b.Property<string>("MigrantDescriptorCodeValue")
-                        .HasColumnType("nvarchar(50)")
+                        .HasColumnType("varchar(50)")
                         .HasMaxLength(50);
 
                     b.Property<bool?>("Race_AmericanIndianAlaskanNative")
@@ -141,30 +138,30 @@ namespace MSDF.StudentEngagement.Persistence.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("SchoolCurrentGradeLevelDescriptorCodeValue")
-                        .HasColumnType("nvarchar(50)")
+                        .HasColumnType("varchar(50)")
                         .HasMaxLength(50);
 
                     b.Property<string>("SchoolName")
-                        .HasColumnType("nvarchar(75)")
+                        .HasColumnType("varchar(75)")
                         .HasMaxLength(75);
 
                     b.Property<string>("SchoolTypeDescriptorCodeValue")
-                        .HasColumnType("nvarchar(50)")
+                        .HasColumnType("varchar(50)")
                         .HasMaxLength(50);
 
                     b.Property<string>("SchoolYear")
-                        .HasColumnType("nvarchar(15)")
+                        .HasColumnType("varchar(15)")
                         .HasMaxLength(15);
 
                     b.Property<string>("StudentStateIdentificationCode")
-                        .HasColumnType("nvarchar(60)")
+                        .HasColumnType("varchar(60)")
                         .HasMaxLength(60);
 
                     b.Property<int>("StudentUSI")
                         .HasColumnType("int");
 
                     b.Property<string>("StudentUniqueId")
-                        .HasColumnType("nvarchar(32)")
+                        .HasColumnType("varchar(32)")
                         .HasMaxLength(32);
 
                     b.HasKey("Id");
@@ -176,44 +173,43 @@ namespace MSDF.StudentEngagement.Persistence.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("bigint");
 
                     b.Property<string>("DeviceId")
-                        .HasColumnType("nvarchar(32)")
+                        .HasColumnType("varchar(32)")
                         .HasMaxLength(32);
 
                     b.Property<string>("IPAddress")
-                        .HasColumnType("nvarchar(15)")
+                        .HasColumnType("varchar(15)")
                         .HasMaxLength(15);
 
                     b.Property<string>("LeaningAppUrl")
-                        .HasColumnType("nvarchar(1024)")
+                        .HasColumnType("varchar(1024)")
                         .HasMaxLength(1024);
 
                     b.Property<string>("ReffererUrl")
-                        .HasColumnType("nvarchar(1024)")
+                        .HasColumnType("varchar(1024)")
                         .HasMaxLength(1024);
 
                     b.Property<string>("StudentElectronicMailAddress")
-                        .HasColumnType("nvarchar(128)")
+                        .HasColumnType("varchar(128)")
                         .HasMaxLength(128);
 
                     b.Property<int>("StudentUSI")
                         .HasColumnType("int");
 
                     b.Property<string>("StudentUniqueId")
-                        .HasColumnType("nvarchar(32)")
+                        .HasColumnType("varchar(32)")
                         .HasMaxLength(32);
 
-                    b.Property<int>("TimeSpent")
+                    b.Property<int?>("TimeSpent")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("UTCEndDate")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime?>("UTCEndDate")
+                        .HasColumnType("datetime");
 
                     b.Property<DateTime>("UTCStartDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime");
 
                     b.HasKey("Id");
 

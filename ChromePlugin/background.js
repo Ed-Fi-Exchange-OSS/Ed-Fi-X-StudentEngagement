@@ -26,11 +26,11 @@ function getUsageData(tabId, index){
 
   return { /*LearningActivityEventModel*/
     /* string */ DataPointType: index == 0 ? DataPointType.START : DataPointType.END,
-    /* string */ IdentityEmailAddress : UserInfo.email,
+    /* string */ IdentityElectronicMailAddress : UserInfo.email,
     /* string */ ReffererUrl : "",
     /* string */ LeaningAppUrl : History[tabId][index][1],
-    /* DateTime */ UTCDateTimeStart : History[tabId][index][0],
-    /* DateTime */ UTCDateTimeEnd : index == 0 ? null : History[tabId][index - 1][0]
+    /* DateTime */ UTCStartDateTime : History[tabId][index][0],
+    /* DateTime */ UTCEndDateTime : index == 0 ? null : History[tabId][index - 1][0]
    };
 }
 
