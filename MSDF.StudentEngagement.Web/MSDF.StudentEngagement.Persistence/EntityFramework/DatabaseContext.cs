@@ -11,11 +11,13 @@ namespace MSDF.StudentEngagement.Persistence.EntityFramework
 
         public DbSet<StudentLearningEventLog> StudentLearningEventLogs { get; set; }
         public DbSet<StudentInformation> StudentInformation { get; set; }
+        public DbSet<LearningApp> LearningApps { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<StudentLearningEventLog>().ToTable("StudentLearningEventLog");
             modelBuilder.Entity<StudentInformation>().ToTable("StudentInformation");
+            modelBuilder.Entity<LearningApp>().ToTable("LearningApp");
         }
 
 

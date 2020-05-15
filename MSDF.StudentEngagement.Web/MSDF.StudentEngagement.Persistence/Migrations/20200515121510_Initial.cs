@@ -8,6 +8,21 @@ namespace MSDF.StudentEngagement.Persistence.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "LearningApp",
+                columns: table => new
+                {
+                    LearningAppIdentifier = table.Column<string>(maxLength: 60, nullable: false),
+                    Namespace = table.Column<string>(maxLength: 255, nullable: true),
+                    Description = table.Column<string>(maxLength: 1024, nullable: true),
+                    Website = table.Column<string>(maxLength: 255, nullable: true),
+                    AppUrl = table.Column<string>(maxLength: 255, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LearningApp", x => x.LearningAppIdentifier);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "StudentInformation",
                 columns: table => new
                 {
@@ -63,9 +78,9 @@ namespace MSDF.StudentEngagement.Persistence.Migrations
                     IPAddress = table.Column<string>(maxLength: 15, nullable: true),
                     ReffererUrl = table.Column<string>(maxLength: 1024, nullable: true),
                     LeaningAppUrl = table.Column<string>(maxLength: 1024, nullable: true),
-                    UTCDateTimeStart = table.Column<DateTime>(nullable: false),
-                    UTCDateTimeEnd = table.Column<DateTime>(nullable: false),
-                    DurationInSeconds = table.Column<int>(nullable: false)
+                    UTCStartDate = table.Column<DateTime>(nullable: false),
+                    UTCEndDate = table.Column<DateTime>(nullable: false),
+                    TimeSpent = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -75,6 +90,9 @@ namespace MSDF.StudentEngagement.Persistence.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "LearningApp");
+
             migrationBuilder.DropTable(
                 name: "StudentInformation");
 

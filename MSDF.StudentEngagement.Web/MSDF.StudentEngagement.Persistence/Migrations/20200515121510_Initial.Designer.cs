@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MSDF.StudentEngagement.Persistence.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20200515021143_Initial")]
+    [Migration("20200515121510_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -20,6 +20,33 @@ namespace MSDF.StudentEngagement.Persistence.Migrations
                 .HasAnnotation("ProductVersion", "3.1.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("MSDF.StudentEngagement.Persistence.Models.LearningApp", b =>
+                {
+                    b.Property<string>("LearningAppIdentifier")
+                        .HasColumnType("nvarchar(60)")
+                        .HasMaxLength(60);
+
+                    b.Property<string>("AppUrl")
+                        .HasColumnType("nvarchar(255)")
+                        .HasMaxLength(255);
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(1024)")
+                        .HasMaxLength(1024);
+
+                    b.Property<string>("Namespace")
+                        .HasColumnType("nvarchar(255)")
+                        .HasMaxLength(255);
+
+                    b.Property<string>("Website")
+                        .HasColumnType("nvarchar(255)")
+                        .HasMaxLength(255);
+
+                    b.HasKey("LearningAppIdentifier");
+
+                    b.ToTable("LearningApp");
+                });
 
             modelBuilder.Entity("MSDF.StudentEngagement.Persistence.Models.StudentInformation", b =>
                 {
@@ -158,9 +185,6 @@ namespace MSDF.StudentEngagement.Persistence.Migrations
                         .HasColumnType("nvarchar(32)")
                         .HasMaxLength(32);
 
-                    b.Property<int>("DurationInSeconds")
-                        .HasColumnType("int");
-
                     b.Property<string>("IPAddress")
                         .HasColumnType("nvarchar(15)")
                         .HasMaxLength(15);
@@ -184,10 +208,13 @@ namespace MSDF.StudentEngagement.Persistence.Migrations
                         .HasColumnType("nvarchar(32)")
                         .HasMaxLength(32);
 
-                    b.Property<DateTime>("UTCDateTimeEnd")
+                    b.Property<int>("TimeSpent")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UTCEndDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("UTCDateTimeStart")
+                    b.Property<DateTime>("UTCStartDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");

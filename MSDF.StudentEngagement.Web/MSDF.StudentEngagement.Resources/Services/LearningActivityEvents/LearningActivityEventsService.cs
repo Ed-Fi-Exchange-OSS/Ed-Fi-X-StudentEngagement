@@ -25,8 +25,8 @@ namespace MSDF.StudentEngagement.Resources.Services.LearningActivityEvents
             var entity = new StudentLearningEventLog { 
                 StudentElectronicMailAddress = model.IdentityElectronicMailAddress,
                 LeaningAppUrl = model.LeaningAppUrl,
-                UTCDateTimeStart = model.UTCDateTimeStart,
-                UTCDateTimeEnd = model.UTCDateTimeEnd
+                UTCStartDate = model.UTCStartDateTime,
+                UTCEndDate = model.UTCEndDateTime
                 // TODO: Add other properties as needed.
             };
 

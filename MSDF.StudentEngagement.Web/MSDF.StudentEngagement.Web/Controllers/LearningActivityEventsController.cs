@@ -23,8 +23,9 @@ namespace MSDF.StudentEngagement.Web.Controllers
 
         [HttpGet]
         public async Task<ActionResult> Get() { return Ok("Here"); }
+
         [HttpGet]
-        public async Task<ActionResult> GetById(int Id) { return Ok("Resource"); }
+        public async Task<ActionResult> GetById(int id) { return Ok("Resource"); }
 
         [HttpPost]
         public async Task<ActionResult> Post(string encryptedPayload)
@@ -36,13 +37,14 @@ namespace MSDF.StudentEngagement.Web.Controllers
             var model = new LearningActivityEventModel {
                 IdentityElectronicMailAddress = "doug@gmail.com",
                 LeaningAppUrl = "https://www.learningapp.com/",
-                UTCDateTimeStart = DateTime.Now,
-                UTCDateTimeEnd = DateTime.Now.AddSeconds(20)
+                UTCStartDateTime = DateTime.Now,
+                UTCEndDateTime = DateTime.Now.AddSeconds(20)
             };
             // Save to log.
-            await _learningActivityEventsService.SaveLearningActivityEventAsync(model); 
-            
-            return CreatedAtAction(nameof(GetById), new { id = product.Id }, product); ;
+            await _learningActivityEventsService.SaveLearningActivityEventAsync(model);
+
+            //return CreatedAtAction(nameof(GetById), new { id = 1 }, model); ;
+            return Accepted();
         }
     }
 }
