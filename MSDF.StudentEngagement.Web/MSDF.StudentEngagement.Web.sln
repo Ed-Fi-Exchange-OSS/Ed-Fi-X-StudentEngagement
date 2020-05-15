@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29326.143
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSDF.StudentEngagement.Web", "MSDF.StudentEngagement.Web\MSDF.StudentEngagement.Web.csproj", "{5429836A-A436-4A30-B210-A987382B4B6A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSDF.StudentEngagement.Web", "MSDF.StudentEngagement.Web\MSDF.StudentEngagement.Web.csproj", "{5429836A-A436-4A30-B210-A987382B4B6A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSDF.StudentEngagement.Resources", "MSDF.StudentEngagement.Resources\MSDF.StudentEngagement.Resources.csproj", "{85F3001F-4207-4CE4-A547-1EC74007C9ED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSDF.StudentEngagement.Resources", "MSDF.StudentEngagement.Resources\MSDF.StudentEngagement.Resources.csproj", "{85F3001F-4207-4CE4-A547-1EC74007C9ED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSDF.StudentEngagement.Persistence", "MSDF.StudentEngagement.Persistence\MSDF.StudentEngagement.Persistence.csproj", "{BAC95A0E-688D-48F2-8AF2-12FE0223CD32}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSDF.StudentEngagement.Persistence", "MSDF.StudentEngagement.Persistence\MSDF.StudentEngagement.Persistence.csproj", "{BAC95A0E-688D-48F2-8AF2-12FE0223CD32}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
