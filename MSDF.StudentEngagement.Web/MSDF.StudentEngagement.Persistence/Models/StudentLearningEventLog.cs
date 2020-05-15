@@ -9,7 +9,7 @@ namespace MSDF.StudentEngagement.Persistence.Models
     public class StudentLearningEventLog
     {
         [Key]
-        public BigInteger Id { get; set; }
+        public long Id { get; set; }
 
         // Student Identification Options
         public int StudentUSI { get; set; }
@@ -31,16 +31,5 @@ namespace MSDF.StudentEngagement.Persistence.Models
         public DateTime UTCDateTimeStart { get; set; }
         public DateTime UTCDateTimeEnd { get; set; }
         public int DurationInSeconds { get; set; }
-
-
-
-
-        //`StudentUSI` int not null,
-        //`LearningAppId` int not null,
-        //`Url` varchar(1024) not null,
-        //`ReffererUrl` varchar(1024) not null,
-        //`StartTime` datetime not null,
-        //`EndTime` datetime null,
-        //`DurationMS` int null,
     }
 }

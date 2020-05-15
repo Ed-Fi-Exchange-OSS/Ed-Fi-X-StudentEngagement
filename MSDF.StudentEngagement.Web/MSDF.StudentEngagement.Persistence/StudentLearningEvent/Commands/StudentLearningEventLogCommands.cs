@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace MSDF.StudentEngagement.Persistence.StudentLearningEvent.Commands
 {
     public interface IStudentLearningEventLogCommands {
-        Task<StudentLearningEventLog> Add(StudentLearningEventLog model);
+        Task<StudentLearningEventLog> AddAsync(StudentLearningEventLog model);
     }
     public class StudentLearningEventLogCommands : IStudentLearningEventLogCommands
     {
@@ -19,7 +19,7 @@ namespace MSDF.StudentEngagement.Persistence.StudentLearningEvent.Commands
             this._db = db;
         }
 
-        public async Task<StudentLearningEventLog> Add(StudentLearningEventLog model) 
+        public async Task<StudentLearningEventLog> AddAsync(StudentLearningEventLog model) 
         {
             _db.Add(model);
             await _db.SaveChangesAsync();

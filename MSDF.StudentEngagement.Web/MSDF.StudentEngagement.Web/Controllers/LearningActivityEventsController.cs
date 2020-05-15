@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using MSDF.StudentEngagement.Resources.Services.LearningActivityEvents;
 
 namespace MSDF.StudentEngagement.Web.Controllers
 {
@@ -12,17 +13,18 @@ namespace MSDF.StudentEngagement.Web.Controllers
     public class LearningActivityEventsController : ControllerBase
     {
         private readonly ILogger<LearningActivityEventsController> _logger;
+        private readonly ILearningActivityEventsService _learningActivityEventsService;
 
-        public LearningActivityEventsController(ILogger<LearningActivityEventsController> logger)
+        public LearningActivityEventsController(ILogger<LearningActivityEventsController> logger, ILearningActivityEventsService learningActivityEventsService)
         {
             _logger = logger;
+            this._learningActivityEventsService = learningActivityEventsService;
         }
 
         [HttpGet]
-        public async Task<ActionResult> Get()
-        {
-            return Ok("Here");
-        }
+        public async Task<ActionResult> Get() { return Ok("Here"); }
+        [HttpGet]
+        public async Task<ActionResult> GetById(int Id) { return Ok("Resource"); }
 
         [HttpPost]
         public async Task<ActionResult> Post(string encryptedPayload)
@@ -31,9 +33,16 @@ namespace MSDF.StudentEngagement.Web.Controllers
             //if (encryptedPayload is NOT valid)
             //    return BadRequest("Invalid string");
 
+            var model = new LearningActivityEventModel {
+                IdentityElectronicMailAddress = "doug@gmail.com",
+                LeaningAppUrl = "https://www.learningapp.com/",
+                UTCDateTimeStart = DateTime.Now,
+                UTCDateTimeEnd = DateTime.Now.AddSeconds(20)
+            };
             // Save to log.
-
-            return Ok();
+            await _learningActivityEventsService.SaveLearningActivityEventAsync(model); 
+            
+            return CreatedAtAction(nameof(GetById), new { id = product.Id }, product); ;
         }
     }
 }

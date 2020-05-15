@@ -5,15 +5,18 @@ namespace MSDF.StudentEngagement.Persistence.EntityFramework
 {
     public class DatabaseContext : Microsoft.EntityFrameworkCore.DbContext
     {
-        public DatabaseContext()
-        {
-        }
-
         public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)
         {
         }
 
-        public virtual DbSet<StudentLearningEventLog> StudentLearningEventLogs { get; set; }
+        public DbSet<StudentLearningEventLog> StudentLearningEventLogs { get; set; }
+        public DbSet<StudentInformation> StudentInformation { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<StudentLearningEventLog>().ToTable("StudentLearningEventLog");
+            modelBuilder.Entity<StudentInformation>().ToTable("StudentInformation");
+        }
 
 
     }
