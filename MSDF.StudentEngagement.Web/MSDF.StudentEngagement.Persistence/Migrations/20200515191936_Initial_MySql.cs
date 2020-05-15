@@ -1,9 +1,10 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using MySql.Data.EntityFrameworkCore.Metadata;
 
 namespace MSDF.StudentEngagement.Persistence.Migrations
 {
-    public partial class Initial : Migration
+    public partial class Initial_MySql : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -27,7 +28,7 @@ namespace MSDF.StudentEngagement.Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     StudentUSI = table.Column<int>(nullable: false),
                     StudentUniqueId = table.Column<string>(maxLength: 32, nullable: true),
                     StudentStateIdentificationCode = table.Column<string>(maxLength: 60, nullable: true),
@@ -70,7 +71,7 @@ namespace MSDF.StudentEngagement.Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     StudentUSI = table.Column<int>(nullable: false),
                     StudentUniqueId = table.Column<string>(maxLength: 32, nullable: true),
                     DeviceId = table.Column<string>(maxLength: 32, nullable: true),
@@ -79,8 +80,8 @@ namespace MSDF.StudentEngagement.Persistence.Migrations
                     ReffererUrl = table.Column<string>(maxLength: 1024, nullable: true),
                     LeaningAppUrl = table.Column<string>(maxLength: 1024, nullable: true),
                     UTCStartDate = table.Column<DateTime>(nullable: false),
-                    UTCEndDate = table.Column<DateTime>(nullable: false),
-                    TimeSpent = table.Column<int>(nullable: false)
+                    UTCEndDate = table.Column<DateTime>(nullable: true),
+                    TimeSpent = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {

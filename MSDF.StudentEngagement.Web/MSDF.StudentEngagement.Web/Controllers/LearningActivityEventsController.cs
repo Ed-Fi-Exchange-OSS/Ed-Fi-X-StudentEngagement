@@ -43,17 +43,18 @@ namespace MSDF.StudentEngagement.Web.Controllers
             var decryptedData = _encryptionProvider.Decrypt(encryptionModel, _configuration["encryptionExportedKey"]);
             if (decryptedData == null) { return BadRequest("Invalid string"); }
 
-            IList<LearningActivityEventModel> learningActivityEventModelsList = 
-                Newtonsoft.Json.JsonConvert.DeserializeObject<IList<LearningActivityEventModel>>(decryptedData);
+            List<LearningActivityEventModel> learningActivityEventModelsList = 
+                Newtonsoft.Json.JsonConvert.DeserializeObject<List<LearningActivityEventModel>>(decryptedData);
 
-            var model = new LearningActivityEventModel {
+/*            var model = new LearningActivityEventModel {
                 IdentityElectronicMailAddress = "doug@gmail.com",
                 LeaningAppUrl = "https://www.learningapp.com/",
                 UTCStartDateTime = DateTime.Now,
                 UTCEndDateTime = DateTime.Now.AddSeconds(20)
             };
-            // Save to log.
-            await _learningActivityEventsService.SaveLearningActivityEventAsync(model);
+*/            // Save to log.
+
+            await _learningActivityEventsService.SaveLearningActivityEventAsync(learningActivityEventModelsList);
 
             return NoContent();
             //return CreatedAtAction(nameof(GetById), new { id = product.Id }, product); ;

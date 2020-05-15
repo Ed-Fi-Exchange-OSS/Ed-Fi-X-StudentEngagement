@@ -11,8 +11,10 @@ namespace MSDF.StudentEngagement.Persistence.Infrastructure.IoC
     {
         public static void RegisterDependencies(IServiceCollection container, IConfiguration configuration)
         {
+            //container.AddDbContext<DatabaseContext>(options =>
+            //    options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
             container.AddDbContext<DatabaseContext>(options =>
-                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+                options.UseMySQL(configuration.GetConnectionString("DefaultConnection")));
 
             RegisterCommandsAndQueriesByConvention<IPersistenceMarker>(container);
         }

@@ -5,13 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20200515020455_Initial.cs" />
-    <Compile Remove="Migrations\20200515020455_Initial.Designer.cs" />
-    <Compile Remove="Migrations\20200515021143_Initial.cs" />
-    <Compile Remove="Migrations\20200515021143_Initial.Designer.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Folder Include="StudentLearningEvent\Queries\" />
   </ItemGroup>
 
@@ -22,6 +15,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="MySql.Data.EntityFrameworkCore" Version="8.0.20" />
   </ItemGroup>
 
 </Project>
