@@ -39,7 +39,7 @@ namespace MSDF.StudentEngagement.Persistence.Migrations
                     SchoolYear = table.Column<string>(maxLength: 15, nullable: true),
                     SchoolCurrentGradeLevelDescriptorCodeValue = table.Column<string>(maxLength: 50, nullable: true),
                     SchoolTypeDescriptorCodeValue = table.Column<string>(maxLength: 50, nullable: true),
-                    ExitWithdrawalDate = table.Column<DateTime>(nullable: false),
+                    ExitWithdrawalDate = table.Column<DateTime>(nullable: true),
                     FirstName = table.Column<string>(maxLength: 75, nullable: true),
                     MiddleName = table.Column<string>(maxLength: 75, nullable: true),
                     LastSurname = table.Column<string>(maxLength: 75, nullable: true),
@@ -59,7 +59,12 @@ namespace MSDF.StudentEngagement.Persistence.Migrations
                     MigrantDescriptorCodeValue = table.Column<string>(maxLength: 50, nullable: true),
                     HomelessDescriptorCodeValue = table.Column<string>(maxLength: 50, nullable: true),
                     FosterDescriptorCodeValue = table.Column<string>(maxLength: 50, nullable: true),
-                    F504DescriptorCodeValue = table.Column<string>(maxLength: 50, nullable: true)
+                    F504DescriptorCodeValue = table.Column<string>(maxLength: 50, nullable: true),
+                    ContactInfoFirstName = table.Column<string>(maxLength: 75, nullable: true),
+                    ContactInfoLastSurname = table.Column<string>(maxLength: 75, nullable: true),
+                    ContactInfoRelationToStudent = table.Column<string>(maxLength: 75, nullable: true),
+                    ContactInfoCellPhoneNumber = table.Column<string>(maxLength: 20, nullable: true),
+                    ContactInfoElectronicMailAddress = table.Column<string>(maxLength: 60, nullable: true)
                 },
                 constraints: table =>
                 {

@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MSDF.StudentEngagement.Persistence.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20200515191936_Initial_MySql")]
+    [Migration("20200519182842_Initial_MySql")]
     partial class Initial_MySql
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -59,6 +59,26 @@ namespace MSDF.StudentEngagement.Persistence.Migrations
                         .HasColumnType("varchar(50)")
                         .HasMaxLength(50);
 
+                    b.Property<string>("ContactInfoCellPhoneNumber")
+                        .HasColumnType("varchar(20)")
+                        .HasMaxLength(20);
+
+                    b.Property<string>("ContactInfoElectronicMailAddress")
+                        .HasColumnType("varchar(60)")
+                        .HasMaxLength(60);
+
+                    b.Property<string>("ContactInfoFirstName")
+                        .HasColumnType("varchar(75)")
+                        .HasMaxLength(75);
+
+                    b.Property<string>("ContactInfoLastSurname")
+                        .HasColumnType("varchar(75)")
+                        .HasMaxLength(75);
+
+                    b.Property<string>("ContactInfoRelationToStudent")
+                        .HasColumnType("varchar(75)")
+                        .HasMaxLength(75);
+
                     b.Property<string>("DeviceId")
                         .HasColumnType("varchar(100)")
                         .HasMaxLength(100);
@@ -79,7 +99,7 @@ namespace MSDF.StudentEngagement.Persistence.Migrations
                         .HasColumnType("varchar(25)")
                         .HasMaxLength(25);
 
-                    b.Property<DateTime>("ExitWithdrawalDate")
+                    b.Property<DateTime?>("ExitWithdrawalDate")
                         .HasColumnType("datetime");
 
                     b.Property<string>("F504DescriptorCodeValue")
