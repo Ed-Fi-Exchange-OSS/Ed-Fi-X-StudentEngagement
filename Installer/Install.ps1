@@ -10,29 +10,10 @@
  
 ############################################################
 
+Import-Module "$PSScriptRoot\Steps" -Force #-Verbose #-Force
 Import-Module "$PSScriptRoot\Config" -Force #-Verbose #-Force
 Import-Module "$PSScriptRoot\IIS" -Force #-Verbose #-Force
 Import-Module "$PSScriptRoot\Prettify" -Force #-Verbose #-Force
-
-Function Install-Prerequisites() {
-    $allPreReqsInstalled = $true
-    
-    Write-Host "Ensurering all Prerequisites are installed:"
-
-    # Ensure the following are installed.
-    Install-Chocolatey
-    #Install-IISPrerequisites
-    #Install-IISUrlRewrite
-    
-    #Install-NetFramework48
-    
-
-    # MsSQL Server
-    #if (!(Test-Path 'HKLM:\Software\Microsoft\Microsoft SQL Server\Instance Names\SQL')) { $allPreReqsInstalled = $false; Write-Host "     Prerequisite not installed: MsSQL-Server" }
-
-    # If not all Pre Reqs installed halt!
-    if(!$allPreReqsInstalled){ Write-Error "Error: Missing Prerequisites. Look above for list." -ErrorAction Stop }
-}
 
 Write-HostInfo "MSDF Student Engagement Tracker Installer"
 Write-Host "To install the MSDF Student Engagement Tracker run one of the following commands:" 
