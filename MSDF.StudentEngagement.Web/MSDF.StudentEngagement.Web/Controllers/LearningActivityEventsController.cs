@@ -33,8 +33,8 @@ namespace MSDF.StudentEngagement.Web.Controllers
         [HttpGet]
         public async Task<ActionResult> Get() { return Ok("Here"); }
 
-        [HttpGet]
-        public async Task<ActionResult> GetById(int id) { return Ok("Resource"); }
+        //[HttpGet]
+        //public async Task<ActionResult> GetById(int id) { return Ok("Resource"); }
 
         [HttpPost]
         public async Task<ActionResult> Post([FromBody]EncryptionModel encryptionModel)

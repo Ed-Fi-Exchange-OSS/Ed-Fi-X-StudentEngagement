@@ -3,7 +3,7 @@
 
   "name": "Student Engagement",
   "description": "Enables monitoring of student engagement for remote learning.",
-  "version": "0.1",
+  "version": "0.1.1",
   "author": "MSDF Douglas Loyo, Emilio Baez, Xavier Lucatero (NearShoreDevs.com)",
 
   "permissions": [ "tabs", "https://www.neltic.com/", "identity", "identity.email" ],
