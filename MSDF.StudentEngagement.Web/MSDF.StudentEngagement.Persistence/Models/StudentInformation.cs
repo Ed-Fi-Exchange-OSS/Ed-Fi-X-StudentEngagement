@@ -29,7 +29,7 @@ namespace MSDF.StudentEngagement.Persistence.Models
         public string SchoolCurrentGradeLevelDescriptorCodeValue { get; set; }
         [StringLength(50)]
         public string SchoolTypeDescriptorCodeValue { get; set; }
-	    public DateTime ExitWithdrawalDate { get; set; }
+	    public DateTime? ExitWithdrawalDate { get; set; }
 
         /*student info*/
         [StringLength(75)]
@@ -67,5 +67,22 @@ namespace MSDF.StudentEngagement.Persistence.Models
         public string FosterDescriptorCodeValue { get; set; }
         [StringLength(50)]
         public string F504DescriptorCodeValue { get; set; }
+        /*contact info*/
+
+        [StringLength(75)]
+        public string ContactInfoFirstName { get; set; }
+
+        [StringLength(75)]
+        public string ContactInfoLastSurname { get; set; }
+
+        [StringLength(75)]
+        public string ContactInfoRelationToStudent { get; set; }
+
+        [StringLength(20)]
+        public string ContactInfoCellPhoneNumber { get; set; }
+
+        [StringLength(60)]
+        public string ContactInfoElectronicMailAddress { get; set; }
+
     }
 }
