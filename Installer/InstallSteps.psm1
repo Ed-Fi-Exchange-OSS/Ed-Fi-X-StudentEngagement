@@ -15,7 +15,7 @@ Function Install-Prerequisites() {
     Write-Host "Ensurering all Prerequisites are installed:"
 
     # Ensure the following are installed.
-    Install-Chocolatey
+    # Install-Chocolatey
     Install-IISPrerequisites
     
     #Install-NetFramework48
@@ -58,7 +58,8 @@ Function Install-StudentEngagementTracker() {
     $config
     Write-HostStep "Installing the full Student Engagement Stack"
     # Ensure all prerequisits are in place.
-    # Install-Prerequisites
+    Install-Prerequisites
+
 
     #1) Ensure temp path is accessible and exists if not create it.
     Write-HostStep "Step: Ensuring temp path is accessible. " $config.TempPathForBinaryDownloads
@@ -84,4 +85,6 @@ Function Install-StudentEngagementTracker() {
     Write-HostStep "Step: IIS Configuring appSettings.json, connectionStrings, logfiles etc..."
     $appSettingsPath = $installPath + "\appsettings.json"
     Set-AppSettingsJsonFile $appSettingsPath $config
+
+    Start-Process "https://localhost/StudentEngagement/api/LearningActivityEvents"
 }

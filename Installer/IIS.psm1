@@ -1,7 +1,9 @@
 Import-Module "$PSScriptRoot\SSLCertificates" -Force #-Verbose #-Force
+Import-Module "$PSScriptRoot\InstallNetCore" -Force #-Verbose #-Force
 
 # Region: IIS Functions
 Function Install-IISPrerequisites() {
+    Write-HostStep "Install-IISPrerequisites"
     $allPreReqsInstalled = $true;
     # Throw this infront 'IIS-ASP', to make fail.
     $prereqs = @('IIS-WebServerRole','IIS-WebServer','IIS-CommonHttpFeatures','IIS-HttpErrors','IIS-ApplicationDevelopment','NetFx4Extended-ASPNET45','IIS-NetFxExtensibility45','IIS-HealthAndDiagnostics','IIS-HttpLogging','IIS-Security','IIS-RequestFiltering','IIS-Performance','IIS-WebServerManagementTools','IIS-ManagementConsole','IIS-BasicAuthentication','IIS-WindowsAuthentication','IIS-StaticContent','IIS-DefaultDocument','IIS-ISAPIExtensions','IIS-ISAPIFilter','IIS-HttpCompressionStatic','IIS-ASPNET45');
@@ -18,6 +20,7 @@ Function Install-IISPrerequisites() {
 
     # TODO: Ensure .Net Core 3.1 is installed and if not install it.
     # Todo: Ensure that .Net Core 3.1 Hosting Bundle is installed.
+    Install-DotNetCore31 $config
     
     # After IIS is installed then lets configure basic things.
     Install-SSLCertOnIIS
