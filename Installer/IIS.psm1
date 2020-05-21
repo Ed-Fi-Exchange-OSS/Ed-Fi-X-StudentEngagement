@@ -16,6 +16,9 @@ Function Install-IISPrerequisites() {
     if($allPreReqsInstalled){ Write-Host "Skipping: All IIS prerequisites are already installed." }
     else { Enable-WindowsOptionalFeature -Online -FeatureName $prereqs }
 
+    # TODO: Ensure .Net Core 3.1 is installed and if not install it.
+    # Todo: Ensure that .Net Core 3.1 Hosting Bundle is installed.
+    
     # After IIS is installed then lets configure basic things.
     Install-SSLCertOnIIS
     

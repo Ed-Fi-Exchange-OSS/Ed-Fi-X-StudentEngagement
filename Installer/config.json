@@ -1,6 +1,25 @@
 {
-    "apiBinariesUrl":"http://www.toolwise.net/StudentEngagementTracker.zip",
-    "encryptionKey":"4Pmra8SUSrgdU3z_rc-Pf1pQzCK9mdb-jaVc-9cSmCE",
-    "StudentLearningEventsConnectionString":"",
-    "EdFiODSConnectionString":""
+    "EncryptionKey":"4Pmra8SUSrgdU3z_rc-Pf1pQzCK9mdb-jaVc-9cSmCD",
+    "TempPathForBinaryDownloads":"C:\\temp\\edfi\\StudentEngegement\\",
+    "BinaryMetadata": {
+        "ApiBinaries":{
+            "Name": "API",
+            "BinaryUrl":"http://www.toolwise.net/StudentEngagementAPI.zip",
+            "InstallPathForBinary": "C:\\inetpub\\wwwroot\\StudentEngegement",
+            "ConnectionString": {
+                "StudentLearningEventsConnectionString":"Server=mysql5027.site4now.net;Database=db_9aa830_learnev;Uid=9aa830_learnev;Pwd=1qaz2wsx;",
+                "EdFiODSConnectionString":"Server=.;Database=v3.4.0_Sandbox_EdFi_Ods_Populated_Template;Trusted_Connection=True;MultipleActiveResultSets=true;"
+            }
+        },
+        "ChromeExtensionUrl": {
+            "Name": "ChromePlugin",
+            "BinaryUrl":"http://www.toolwise.net/StudentEngagementExtension.zip",
+            "InstallPathForBinary": "C:\\temp\\edfi\\StudentEngegement\\"
+        }
+    },
+    "IISSettings": { 
+        "ParentSiteName": "Default Web Site",
+        "ApplicationPool": "DefaultAppPool",
+        "WebSiteName": "StudentEngagement"
+    }
 }

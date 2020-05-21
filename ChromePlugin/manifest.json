@@ -1,19 +1,19 @@
 {
   "manifest_version": 2,
 
-  "name": "Student Engagement",
-  "description": "Enables monitoring of student engagement for remote learning.",
+  "name": "Student Engagement - Dev Test",
+  "description": "Enables tracking of student engagement in remote learning environments.",
   "version": "0.1.1",
   "author": "MSDF Douglas Loyo, Emilio Baez, Xavier Lucatero (NearShoreDevs.com)",
 
-  "permissions": [ "tabs", "https://www.neltic.com/", "identity", "identity.email" ],
+  "permissions": [ "tabs", "https://localhost/", "identity", "identity.email" ],
   "icons": {
-    "16":  "clock16.png",
-    "48":  "clock48.png",
-    "128": "clock128.png"
+    "16":  "images/icon-16.png",
+    "48":  "images/icon-48.png",
+    "128": "images/icon-128.png"
   },
   "browser_action": {
-    "default_icon": { "19": "browser-action-19.png", "38": "browser-action-38.png"}
+    "default_icon": { "19": "images/browser-action-19.png", "38": "images/browser-action-38.png"}
   },
   "background": {
     "scripts": [ "config.js", "encryptionService.js", "background.js" ],

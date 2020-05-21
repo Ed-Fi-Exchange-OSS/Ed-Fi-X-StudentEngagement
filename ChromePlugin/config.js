@@ -1,8 +1,8 @@
 var config = {
-    api: {"Url":"https://learningeventsapi.neltic.com/api/LearningActivityEvents"},
+    api: {"Url":"https://localhost/StudentEngagement/api/LearningActivityEvents"},
     encryptionExportedKey: "4Pmra8SUSrgdU3z_rc-Pf1pQzCK9mdb-jaVc-9cSmCE",
     identification: {
-        StudentUniqueId: "A8273985",
+        StudentUniqueId: "123",
         StudentElectronicMail: "doug@ddd.com",
         DeviceId: "A3423-5F898-...."
     }
