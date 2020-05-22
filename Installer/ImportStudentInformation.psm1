@@ -147,7 +147,7 @@ function Import-StudentInfo($sourceConnStr, $destConnStr) {
 
         $testRowCount = Get-StudentInfoRowCount $dConn
         if ($testRowCount -gt 0) {    
-            Write-Warning "StudentInformation table has data. Cleaning"
+            Write-Warning "StudentInformation table have data. Cleaning"
             $truncateQuery = "TRUNCATE TABLE " + $dConn.Database + ".StudentInformation"
             $null = Execute-NonQuery $truncateQuery $dConn
         }

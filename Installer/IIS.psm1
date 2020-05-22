@@ -15,7 +15,10 @@ Function Install-IISPrerequisites() {
     Write-Host "Ensuring all IIS prerequisites are already installed."
     foreach($p in $prereqs)
     {
-        if((Get-WindowsOptionalFeature -Online -FeatureName $p).State -eq "Disabled") { $allPreReqsInstalled = $false; Write-Host "Prerequisite not installed: $p" }
+        if((Get-WindowsOptionalFeature -Online -FeatureName $p).State -eq "Disabled") { 
+            $allPreReqsInstalled = $false; Write-Host "Prerequisite not installed: $p" 
+            break
+        }
     }
 
     if($allPreReqsInstalled){ Write-Host "Skipping: All IIS prerequisites are already installed." }

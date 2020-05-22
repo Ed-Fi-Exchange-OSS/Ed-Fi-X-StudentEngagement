@@ -20,8 +20,10 @@ Function Install-Prerequisites() {
     Install-IISPrerequisites
     
     #install db libraries
-    choco install mysql-connector
-    Install-Module -Name SqlServer
+    choco install mysql-connector -y
+    # TODO: Ensure that MSSQL module dont exists before installing
+    write-host "Adding powershell SQLServer module"
+    Install-Module -Name SqlServer -Force
 
     # MsSQL Server
     #if (!(Test-Path 'HKLM:\Software\Microsoft\Microsoft SQL Server\Instance Names\SQL')) { $allPreReqsInstalled = $false; Write-Host "     Prerequisite not installed: MsSQL-Server" }
