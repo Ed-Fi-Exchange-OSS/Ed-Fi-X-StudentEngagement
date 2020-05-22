@@ -23,9 +23,6 @@ Function Install-Prerequisites() {
     choco install mysql-connector
     Install-Module -Name SqlServer
 
-    #Install-NetFramework48
-    
-
     # MsSQL Server
     #if (!(Test-Path 'HKLM:\Software\Microsoft\Microsoft SQL Server\Instance Names\SQL')) { $allPreReqsInstalled = $false; Write-Host "     Prerequisite not installed: MsSQL-Server" }
 
@@ -60,7 +57,7 @@ Function Install-Binaries($settings, $tempPathForBinaries){
 Function Install-StudentEngagementTracker() {
     # Get all the configuration parameters
     $config = Get-ConfigurationParameters
-
+    
     Write-HostStep "Installing the full Student Engagement Stack"
     # Ensure all prerequisits are in place.
     Install-Prerequisites

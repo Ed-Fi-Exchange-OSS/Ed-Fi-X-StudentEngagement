@@ -1,0 +1,28 @@
+{
+    /*Encryption Key reffers to the key used to encrypt and decrypt the JSON payload coming from the Chrome Plugin*/ 
+    "EncryptionKey":"4Pmra8SUSrgdU3z_rc-Pf1pQzCK9mdb-jaVc-9cSmCD",
+    "TempPathForBinaryDownloads":"C:\\temp\\edfi\\StudentEngegement\\",
+    "BinaryMetadata": {
+        "ApiBinaries":{
+            "Name": "API",
+            "BinaryUrl":"http://www.toolwise.net/StudentEngagementAPI.zip",
+            "InstallPathForBinary": "C:\\inetpub\\wwwroot\\StudentEngegement",
+            "ConnectionString": {
+                /*This connection string is for the database that will store the stream of learning events.*/ 
+                "StudentLearningEventsConnectionString":"Server=mysql5027.site4now.net;Database=db_9aa830_learnev;Uid=9aa830_learnev;Pwd=1qaz2wsx;",
+                /*This connection string is for the EdFi ODS database where we will pull the student flat demogs from.*/
+                "EdFiODSConnectionString":"Server=.;Database=v3.4.0_Sandbox_EdFi_Ods_Populated_Template;Trusted_Connection=True;MultipleActiveResultSets=true;"
+            }
+        },
+        "ChromeExtensionUrl": {
+            "Name": "ChromePlugin",
+            "BinaryUrl":"http://www.toolwise.net/StudentEngagementExtension.zip",
+            "InstallPathForBinary": "C:\\temp\\edfi\\StudentEngegement\\"
+        }
+    },
+    "IISSettings": { 
+        "ParentSiteName": "Default Web Site",
+        "ApplicationPool": "DefaultAppPool",
+        "WebSiteName": "StudentEngagement"
+    }
+}
