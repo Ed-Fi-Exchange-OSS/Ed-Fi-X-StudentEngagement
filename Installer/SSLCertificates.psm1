@@ -1,7 +1,8 @@
 
 # Self Signed Certificate Functions
-Function Install-TrustedSSLCertificate()
+Function Install-TrustedSSLCertificate($tempDir)
 {
+    $exportCertFile = Join-Path $tempDir "edfiLocalhostSSL.crt"
     $certFriendlyName = 'Ed-Fi localhost SSL'
     
     # See if we already have it installed.
@@ -27,8 +28,8 @@ Function Install-TrustedSSLCertificate()
     
     # New certificates can only be installed into MY store. So lets export it and import it into LocalMachine\Root
     # We need to import into LocalMachine\Root so that its a valid trusted SSL certificate.
-    Export-Certificate -Cert $selfSignedCert -FilePath "C:\temp\ed-fi\edfiLocalhostSSL.crt"
-    $certInRoot = Import-Certificate -CertStoreLocation 'Cert:\LocalMachine\Root' -FilePath "C:\temp\ed-fi\edfiLocalhostSSL.crt"
+    Export-Certificate -Cert $selfSignedCert -FilePath $exportCertFile
+    $certInRoot = Import-Certificate -CertStoreLocation 'Cert:\LocalMachine\Root' -FilePath $exportCertFile
     $certInRoot.FriendlyName = $certFriendlyName
 
     return $selfSignedCert

@@ -4,16 +4,17 @@ function New-TemporaryDirectory {
    New-Item -ItemType Directory -Path (Join-Path $parent $name)
 }
 
-function TestDotNetIsInstalled(){
-   try{
-     $dotNet = dotnet --info
-   }catch{
+function TestDotNetIsInstalled() {
+   try {
+      $dotNet = dotnet --info
+   }
+   catch {
       return $FALSE
    }
-   return ($null -ne ($dotNet | ? { $_ -match "AspNetCore.App 3."}) -and $null -ne ($dotNet | ? { $_ -match "NETCore.App 3."}))
+   return ($null -ne ($dotNet | ? { $_ -match "AspNetCore.App 3." }) -and $null -ne ($dotNet | ? { $_ -match "NETCore.App 3." }))
 }
 
-function DownloadDotNetInstaller($tempDir){
+function DownloadDotNetInstaller($tempDir) {
    #
    # Download the Windows Hosting Bundle Installer for ASP.NET Core 3.1 Runtime (v3.1.0)
    #
@@ -22,7 +23,7 @@ function DownloadDotNetInstaller($tempDir){
    #
 
    $whb_installer_url = "https://download.visualstudio.microsoft.com/download/pr/fa3f472e-f47f-4ef5-8242-d3438dd59b42/9b2d9d4eecb33fe98060fd2a2cb01dcd/dotnet-hosting-3.1.0-win.exe"
-   $whb_installer_file = $tempDir + [System.IO.Path]::GetFileName( $whb_installer_url )
+   $whb_installer_file = Join-Path $tempDir  [System.IO.Path]::GetFileName( $whb_installer_url )
    if ( [System.IO.File]::Exists( $whb_installer_file ) ) {
       return $whb_installer_file 
    }
@@ -37,28 +38,25 @@ function DownloadDotNetInstaller($tempDir){
    }
 }
 
-function ExecuteInstaller($installerFile){
-   Start-Process -Wait -FilePath $installerFile 
+function ExecuteInstaller($installerFile) {
+   Start-Process -Wait -FilePath $installerFile /passive
 }
 
-function Install-DotNetCore31($config) {
+function Install-DotNetCore31($tempDir) {
    #
    # Reference: https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/iis/?view=aspnetcore-3.1
    #
-    Write-Host "Check if Dot Net Core is already installed"
+   Write-Host "Check if Dot Net Core is already installed"
    if (TestDotNetIsInstalled) {
       Write-Host "Dot Net Core is already installed"
       return
    }
 
-   if($null -ne $config){
-      $tempDir = $config.TempPathForBinaryDownloads
-   }else{
+   if ($null -eq $tempDir) {
       $tempDir = "C:\temp\edfi\StudentEngegement\"
    }
    if ( ![System.IO.Directory]::Exists( $tempDir ) ) {
       throw "Error creating temo directory"
-      
    }
 
    Write-Host "* Downloading Dot Net Core 3.1"

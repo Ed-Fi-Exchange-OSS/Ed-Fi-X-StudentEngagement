@@ -1,37 +1,35 @@
 
-function Get-MySQLConnection($connectionString){
+function Get-MySQLConnection($connectionString) {
     #needs mysql-connector : choco install MySql Connector/NET
 
     [void][system.reflection.Assembly]::LoadWithPartialName("MySql.Data") 
-    try{
+    try {
         $conn = New-Object MySql.Data.MySqlClient.MySqlConnection($connectionString) 
         $conn.Open() 
-    }catch{
-        Write-Warning "Unable to connect to MySQL server"
-        Write-Warning $_.Exception.GetType().FullName
-        Write-Warning $_.Exception.Message
-        exit
+    }
+    catch {
+        if ($null -ne $conn) { $conn.Dispose() }
+        throw
     }
     return $conn
 }
 
 
-function Get-MSSQLConnection($connectionString){
+function Get-MSSQLConnection($connectionString) {
     # needs  Install-Module -Name SqlServer
-    try{
+    try {
         $conn = New-Object System.Data.SqlClient.SqlConnection $connectionString
         $conn.Open() 
-    }catch{
-        Write-Warning "Unable to connect to MSSQL server"
-        Write-Warning $_.Exception.GetType().FullName
-        Write-Warning $_.Exception.Message
-        exit
+    }
+    catch {
+        if ($null -ne $conn) { $conn.Dispose() }
+        throw
     }
     return $conn
 }
 
 
-function Get-QueryReader($query, $conn){
+function Get-QueryReader($query, $conn) {
     $cmd = $conn.CreateCommand()
     $cmd.CommandText = $query
     $reader = $cmd.ExecuteReader()  
@@ -39,13 +37,13 @@ function Get-QueryReader($query, $conn){
     return $reader
 }
 
-function Get-QueryScalar($query, $conn){
+function Get-QueryScalar($query, $conn) {
     $cmd = $conn.CreateCommand()
     $cmd.CommandText = $query
     return $cmd.ExecuteScalar()
 }
 
-function Execute-NonQuery($query, $conn){
+function Execute-NonQuery($query, $conn) {
     $cmd = $conn.CreateCommand()
     $cmd.CommandText = $query
     $rowsInserted = $cmd.ExecuteNonQuery()

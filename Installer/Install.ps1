@@ -10,7 +10,7 @@
  
 ############################################################
 
-Import-Module "$PSScriptRoot\InstallSteps" -Force #-Verbose #-Force
+Import-Module "$PSScriptRoot\InstallSteps" -Force -DisableNameChecking #-Verbose #-Force
 Import-Module "$PSScriptRoot\Config" -Force #-Verbose #-Force
 Import-Module "$PSScriptRoot\IIS" -Force #-Verbose #-Force
 Import-Module "$PSScriptRoot\Prettify" -Force #-Verbose #-Force

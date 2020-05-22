@@ -1,6 +1,7 @@
 Import-Module "$PSScriptRoot\Config" -Force #-Verbose #-Force
 Import-Module "$PSScriptRoot\IIS" -Force #-Verbose #-Force
 Import-Module "$PSScriptRoot\Prettify" -Force #-Verbose #-Force
+Import-Module "$PSScriptRoot\ImportStudentInformation" -Force -DisableNameChecking #-Verbose #-Force
 
 Function Install-Chocolatey(){
     if(!(Test-Path "$($env:ProgramData)\chocolatey\choco.exe"))
@@ -15,9 +16,13 @@ Function Install-Prerequisites() {
     Write-Host "Ensurering all Prerequisites are installed:"
 
     # Ensure the following are installed.
-    # Install-Chocolatey
+    Install-Chocolatey
     Install-IISPrerequisites
     
+    #install db libraries
+    choco install mysql-connector
+    Install-Module -Name SqlServer
+
     #Install-NetFramework48
     
 
@@ -55,7 +60,7 @@ Function Install-Binaries($settings, $tempPathForBinaries){
 Function Install-StudentEngagementTracker() {
     # Get all the configuration parameters
     $config = Get-ConfigurationParameters
-    $config
+
     Write-HostStep "Installing the full Student Engagement Stack"
     # Ensure all prerequisits are in place.
     Install-Prerequisites
@@ -86,5 +91,12 @@ Function Install-StudentEngagementTracker() {
     $appSettingsPath = $installPath + "\appsettings.json"
     Set-AppSettingsJsonFile $appSettingsPath $config
 
+    #5) StudentInformation ETL
+    Write-HostStep "Step: Importing  StudentInformation"
+    $sourceConnStr = $config.BinaryMetadata.ApiBinaries.ConnectionString.EdFiODSConnectionString 
+    $destConnStr = $config.BinaryMetadata.ApiBinaries.ConnectionString.StudentLearningEventsConnectionString 
+    Import-StudentInfo $sourceConnStr $destConnStr
+ 
+    Write-HostStep "Step: Opening webapi"
     Start-Process "https://localhost/StudentEngagement/api/LearningActivityEvents"
 }

@@ -3,6 +3,9 @@ Import-Module "$PSScriptRoot\InstallNetCore" -Force #-Verbose #-Force
 
 # Region: IIS Functions
 Function Install-IISPrerequisites() {
+    $config = Get-ConfigurationParameters
+    $tempDir = $config.TempPathForBinaryDownloads
+
     Write-HostStep "Install-IISPrerequisites"
     $allPreReqsInstalled = $true;
     # Throw this infront 'IIS-ASP', to make fail.
@@ -20,7 +23,7 @@ Function Install-IISPrerequisites() {
 
     # TODO: Ensure .Net Core 3.1 is installed and if not install it.
     # Todo: Ensure that .Net Core 3.1 Hosting Bundle is installed.
-    Install-DotNetCore31 $config
+    Install-DotNetCore31 $tempDir
     
     # After IIS is installed then lets configure basic things.
     Install-SSLCertOnIIS
@@ -28,8 +31,10 @@ Function Install-IISPrerequisites() {
 }
 
 Function Install-SSLCertOnIIS(){
+    $config = Get-ConfigurationParameters
+    $tempDir = $config.TempPathForBinaryDownloads
     Write-Host "Installing SSL Certificate on IIS"
-    $certThumbprint = (Install-TrustedSSLCertificate).Thumbprint
+    $certThumbprint = (Install-TrustedSSLCertificate $tempDir).Thumbprint
     Write-Host "     Found cert" $certThumbprint
     $siteName = "Default Web Site"
     $binding = Get-WebBinding -Name $siteName -Protocol "https"
