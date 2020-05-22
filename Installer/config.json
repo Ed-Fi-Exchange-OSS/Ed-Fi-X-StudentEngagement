@@ -7,8 +7,8 @@
             "BinaryUrl":"http://www.toolwise.net/StudentEngagementAPI.zip",
             "InstallPathForBinary": "C:\\inetpub\\wwwroot\\StudentEngegement",
             "ConnectionString": {
-                "StudentLearningEventsConnectionString":"Server=mysql5027.site4now.net;Database=db_9aa830_learnev;Uid=9aa830_learnev;Pwd=1qaz2wsx;",
-                "EdFiODSConnectionString":"Server=.;Database=v3.4.0_Sandbox_EdFi_Ods_Populated_Template;Trusted_Connection=True;MultipleActiveResultSets=true;"
+                "StudentLearningEventsConnectionString":"",
+                "EdFiODSConnectionString":""
             }
         },
         "ChromeExtensionUrl": {
