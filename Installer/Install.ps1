@@ -25,4 +25,12 @@ Write-HostStep " Only Install the Chrome Plugin"
 Write-Host "    Install-StudentEngagementTrackerChromePlugin" 
 
 $config = Get-ConfigurationParameters
+if ($config.BinaryMetadata.ApiBinaries.ConnectionString.StudentLearningEventsConnectionString.Trim().Length -eq 0) {
+    Write-Warning "StudentLearningEventsConnectionString is empty. Configure a connection string in the $PSScriptRoot\config.json file for the destination database"
+}
+if ($config.BinaryMetadata.ApiBinaries.ConnectionString.EdFiODSConnectionString.Trim().Length -eq 0) {
+    Write-Warning "EdFiODSConnectionString is empty. Configure a connection string in the $PSScriptRoot\config.json file for the MSSQL EdFi database"
+}
+
 Write-Host "Key: " $config.encryptionKey
+

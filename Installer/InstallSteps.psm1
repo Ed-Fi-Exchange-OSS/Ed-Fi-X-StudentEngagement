@@ -60,6 +60,12 @@ Function Install-StudentEngagementTracker() {
     # Get all the configuration parameters
     $config = Get-ConfigurationParameters
     
+    $destConnStr = $config.BinaryMetadata.ApiBinaries.ConnectionString.StudentLearningEventsConnectionString 
+    if ($destConnStr.Trim().Length -eq 0) {
+        Write-Warning "StudentLearningEventsConnectionString is empty. Configure a connection string in the $PSScriptRoot\config.json for the destination database. Terminating script"
+        return
+    }
+    
     Write-HostStep "Installing the full Student Engagement Stack"
     # Ensure all prerequisits are in place.
     Install-Prerequisites
@@ -93,8 +99,12 @@ Function Install-StudentEngagementTracker() {
     #5) StudentInformation ETL
     Write-HostStep "Step: Importing  StudentInformation"
     $sourceConnStr = $config.BinaryMetadata.ApiBinaries.ConnectionString.EdFiODSConnectionString 
-    $destConnStr = $config.BinaryMetadata.ApiBinaries.ConnectionString.StudentLearningEventsConnectionString 
-    Import-StudentInfo $sourceConnStr $destConnStr
+    if ($sourceConnStr.Trim().Length -eq 0) {
+        Write-Warning "EdFiODSConnectionString is empty. Configure a connection string for the MSSQL EdFi database"
+    }
+    if ($destConnStr.Trim().Length -gt 0 -and $sourceConnStr.Trim().Length -gt 0) {
+        Import-StudentInfo $sourceConnStr $destConnStr
+    }
  
     Write-HostStep "Step: Opening webapi"
     Start-Process "https://localhost/StudentEngagement/api/LearningActivityEvents"

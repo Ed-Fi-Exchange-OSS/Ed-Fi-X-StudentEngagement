@@ -162,7 +162,7 @@ function Import-StudentInfo($sourceConnStr, $destConnStr) {
         Write-HostStep "Import StudentInfo data completed"
     }
     catch {            
-        Write-Warning "An exception accur while importing data. Terminating"
+        Write-Warning "An exception happen while importing data. Terminating"
         Write-Warning $_.Exception.GetType().FullName
         Write-Warning $_.Exception.Message
     }
