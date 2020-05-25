@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using MSDF.StudentEngagement.Resources.Providers.Encryption;
 using MSDF.StudentEngagement.Web.Infrastructure.IoC;
 
 namespace MSDF.StudentEngagement.Web
@@ -20,7 +21,7 @@ namespace MSDF.StudentEngagement.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddCors();
-
+            //RSAEncryptionProvider.GenerateRSAKeysAndSave();
             IoCConfig.RegisterDependencies(services, Configuration);
             services.AddControllers().AddNewtonsoftJson();
         }

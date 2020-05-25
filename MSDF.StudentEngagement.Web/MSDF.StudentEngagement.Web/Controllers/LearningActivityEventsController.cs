@@ -31,7 +31,15 @@ namespace MSDF.StudentEngagement.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> Get() { return Ok("Here"); }
+        public async Task<ActionResult> Get() 
+        {
+            var publicKey = RSAEncryptionProvider.GetPublicKeyParameters();
+            var privateKey = RSAEncryptionProvider.GetPrivateKeyParameters();
+
+            var encryptedText = RSAEncryptionProvider.Encrypt("Here", publicKey);
+            var decryptedText = RSAEncryptionProvider.Decrypt(encryptedText, privateKey);
+            return Ok($"enc:{encryptedText} dec:{decryptedText}");
+        }
 
         //[HttpGet]
         //public async Task<ActionResult> GetById(int id) { return Ok("Resource"); }
