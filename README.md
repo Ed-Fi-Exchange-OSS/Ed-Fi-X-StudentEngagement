@@ -30,25 +30,29 @@ This repository includes a Google Chrome plugin that captures student navigation
    * _StudentLearningEventsConnectionString_ and,
    * _EdFiODSConnectionString_
 
-<img src="img/configjson.png" width="600" >
+    <img src="img/configjson.png" width="800" >
+
 4. Open PowerShell as an "Administrator"
 <br/><img src="img/powershell1.png" width="400" >
+
 5. Navigate to the path where you unzipped the code and into the ~\Installer folder.
 <br/><img src="img/powershell2.png" width="500" >
+
 6. Execute the following command:
+    ```PowerShell
+    C:\temp\edfi\StudentEngegement\Ed-Fi-X-StudentEngagement-master\Installer> .\Install.ps1
+    ```
+    <img src="img/powershell3.png" width="850" >
+    
+    *Note: If you skipped or did not configure the <b>config.json</b> you will see some warnings and it will not let you proceed.
 
-```PowerShell
-C:\temp\edfi\StudentEngegement\Ed-Fi-X-StudentEngagement-master\Installer> .\Install.ps1
-```
-<br/><img src="img/powershell3.png" width="500" >
-<br/>*Note: If you skipped or did not configure the <b>config.json</b> you will see some warnings and it will not let you proceed.
-Continue by choosing the type of installation you wish to use. For the sake of these instructions we will use "Install everything"
-
-```PowerShell
-C:\temp\edfi\StudentEngegement\Ed-Fi-X-StudentEngagement-master\Installer> ./Install-StudentEngagementTracker
-```
-Once the install succeeds it will open a chrome browser with the URL of the API and the plugin installed on the top right corner.<br/><img src="img/chrome1.png" width="600" >
-<br/> At the end a Chrome window will be open to the webapi URL. Chrome will install the plugin from the web store.
+7. Continue by choosing the type of installation you wish to use. For the sake of these instructions we will use "Install everything"
+    ```PowerShell
+    C:\temp\edfi\StudentEngegement\Ed-Fi-X-StudentEngagement-master\Installer> ./Install-StudentEngagementTracker
+    ```
+    Once the install succeeds it will open a chrome browser with the URL of the API and the plugin installed on the top right corner.<br/>
+    <img src="img/chrome1.png" width="600" ><br/>
+    At the end a Chrome window will be open to the webapi URL. Chrome will install the plugin from the web store.
 
 ## Configure Google Data Studio Report
 We have provided a sample Google Data Studio report template. To be able to update the report we need you to first create a data source and then make a copy of the report.
@@ -65,7 +69,8 @@ We have provided a sample Google Data Studio report template. To be able to upda
    1. Input the server, database name and credentials and click on the _AUTHENTICATE_ button. This will load the tables on the right.
    2. On the TABLES column, select the _studentengagementreport_ view and 
    3. Finally click on the _Connect_ button on the top right of the screen
-<br/><img src="img/CreateDataSource4.png" width="700" >
+
+    <img src="img/CreateDataSource4.png" width="700" >
 
 
 ### Copy report
