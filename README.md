@@ -21,22 +21,22 @@ This repository includes a Google Chrome plugin that captures student navigation
 ## Setup Instructions
 
 
-1. Edit [config.json](./config.json) file to configure properties _StudentLearningEventsConnectionString_ and _EdFiODSConnectionString_ in _BinaryMetadata.ApiBinaries.ConnectionString_
-<br/><img src="img/configjson.png" width="600" >
-2. Download the scripts in zip format 
+1. Download the scripts in zip format 
 <br/><img src="img/download.png" width="300" >
-3. Unzip them to a known location like C:\temp\edfi\StudentEngegement
+2. Unzip them to a known location like C:\temp\edfi\StudentEngegement
 <br/><img src="img/explorer1.png" width="400" >
+3. Edit [config.json](./config.json) file to configure properties _StudentLearningEventsConnectionString_ and _EdFiODSConnectionString_ in _BinaryMetadata.ApiBinaries.ConnectionString_
+<br/><img src="img/configjson.png" width="600" >
 4. Open PowerShell as an "Administrator"
 <br/><img src="img/powershell1.png" width="400" >
 5. Navigate to the path where you unzipped the scripts
-<br/><img src="img/Powershell2.png" width="500" >
+<br/><img src="img/powershell2.png" width="500" >
 6. Execute the following command:
 
 ```PowerShell
 C:\temp\edfi\StudentEngegement\> .\Install.ps1
 ```
-<br/><img src="img/Powershell3.png" width="500" >
+<br/><img src="img/powershell3.png" width="500" >
 <br/>There will be some warnings if you didn't configure the connection strings in [config.json](./config.json). Then choose the type of installation you wish to use. For the sake of this tutorial we will do "Install everything"
 
 ```PowerShell
