@@ -23,15 +23,15 @@ This repository includes a Google Chrome plugin that captures student navigation
 
 1. Edit [config.json](./config.json) file to configure properties _StudentLearningEventsConnectionString_ and _EdFiODSConnectionString_ in _BinaryMetadata.ApiBinaries.ConnectionString_
 <br/><img src="img/configjson.png" width="600" >
-1. Download the scripts in zip format 
+2. Download the scripts in zip format 
 <br/><img src="img/download.png" width="300" >
-2. Unzip them to a known location like C:\temp\edfi\StudentEngegement
+3. Unzip them to a known location like C:\temp\edfi\StudentEngegement
 <br/><img src="img/explorer1.png" width="400" >
-3. Open PowerShell as an "Administrator"
+4. Open PowerShell as an "Administrator"
 <br/><img src="img/powershell1.png" width="400" >
-4. Navigate to the path where you unzipped the scripts
+5. Navigate to the path where you unzipped the scripts
 <br/><img src="img/Powershell2.png" width="500" >
-5. Execute the following command:
+6. Execute the following command:
 
 ```PowerShell
 C:\temp\edfi\StudentEngegement\> .\Install.ps1
