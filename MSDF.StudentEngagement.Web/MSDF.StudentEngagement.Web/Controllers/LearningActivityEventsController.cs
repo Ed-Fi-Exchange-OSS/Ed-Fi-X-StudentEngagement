@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -50,25 +51,26 @@ namespace MSDF.StudentEngagement.Web.Controllers
         [HttpPost]
         public async Task<ActionResult> Post([FromBody]EncryptionModel encryptionModel)
         {
-            //TODO: Validate encryptedPayload by trying to decrypt payload into final request model.
+            // Validate encryptedPayload by trying to decrypt payload into final request model.
             var decryptedData = _encryptionProvider.Decrypt(encryptionModel, _configuration["encryptionExportedKey"]);
             if (decryptedData == null) { return BadRequest("Invalid string"); }
 
             List<LearningActivityEventModel> learningActivityEventModelsList = 
-                Newtonsoft.Json.JsonConvert.DeserializeObject<List<LearningActivityEventModel>>(decryptedData);
-
-/*            var model = new LearningActivityEventModel {
-                IdentityElectronicMailAddress = "doug@gmail.com",
-                LeaningAppUrl = "https://www.learningapp.com/",
-                UTCStartDateTime = DateTime.Now,
-                UTCEndDateTime = DateTime.Now.AddSeconds(20)
-            };
-*/            // Save to log.
+                Newtonsoft.Json.JsonConvert.DeserializeObject<List<LearningActivityEventModel>>(decryptedData)
+                .Where(la => IsInWhitelist(la.LeaningAppUrl))
+                .ToList();
 
             await _learningActivityEventsService.SaveLearningActivityEventAsync(learningActivityEventModelsList);
 
             return NoContent();
-            //return CreatedAtAction(nameof(GetById), new { id = product.Id }, product); ;
+        }
+
+        private bool IsInWhitelist(string url)
+        {
+            var whitelist = _configuration.GetSection("Whitelist").GetChildren().ToList()
+                .Select(app => new { app = app["app"], regex = app["regex"] })
+                .ToList();
+            return whitelist.Any(itm => Regex.IsMatch(url, itm.regex) );
         }
 
     }

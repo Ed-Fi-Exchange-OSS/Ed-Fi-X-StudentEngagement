@@ -7,6 +7,9 @@ This plugin was based on https://github.com/google/page-timer/ with Apache Licen
 var History = {};
 var EncryptionService = new EncryptionService();
 var UserInfo = {email: "", id: "" };
+/* key used in localstorage for the whitelist */
+const WHITELIST_KEY = "whitelist"
+const NOT_IN_WHITELIST = "not_in_whitelist"
 /* get user info fromm chrome. Only works if the user has synchronization activated */
 chrome.identity.getProfileUserInfo(userInfo => UserInfo = userInfo);
 
@@ -21,15 +24,19 @@ const DataPointType = {
   END: "end"
 }
 
-function getUsageData(tabId, index){
-  if(!History[tabId][index]) return null;
+function GetUsageData(tabId, index){
+  const DATE_INDEX = 0;
+  const URL_INDEX = 1;
+
+  if(!History[tabId][index]) {return null;}
+  if(History[tabId][index][URL_INDEX] == NOT_IN_WHITELIST) {return null;}
 
   return { /*LearningActivityEventModel*/
     /* string */ DataPointType: index == 0 ? DataPointType.START : DataPointType.END,
     /* string */ IdentityElectronicMailAddress : UserInfo.email,
     /* string */ ReffererUrl : "",
-    /* string */ LeaningAppUrl : History[tabId][index][1],
-    /* DateTime */ UTCStartDateTime : History[tabId][index][0],
+    /* string */ LeaningAppUrl : History[tabId][index][URL_INDEX],
+    /* DateTime */ UTCStartDateTime : History[tabId][index][DATE_INDEX],
     /* DateTime */ UTCEndDateTime : index == 0 ? null : History[tabId][index - 1][0]
    };
 }
@@ -50,6 +57,65 @@ function SendDataToServer(data) {
 }
 /* ============================================*/
 
+/* ============ Whitelist =====================*/
+function SaveWhitelistFromAPI(){
+  var xhr = new XMLHttpRequest();
+  var url = config.api.Whitelist;
+  xhr.open("GET", url, true);
+  xhr.onload = function (){
+    if (xhr.readyState === 4) {
+      if (xhr.status === 200) {      
+          var strWhitelist = xhr.responseText;
+          /* TODO: Check that the object is correct*/
+          localStorage.setItem(WHITELIST_KEY, strWhitelist)
+      } else {
+          console.error(xhr.statusText);
+          setTimeout(SaveWhitelistFromAPI, 5000)
+      }
+    }    
+  };
+  xhr.send(null);
+}
+
+function GetWhitelist(){
+  var strWhitelist = localStorage.getItem(WHITELIST_KEY);
+  if(strWhitelist == null){ 
+    error = "No whitelist in localstorage";
+    console.error(error);
+    setTimeout(SaveWhitelistFromAPI, 5000);
+    throw(error);
+  }
+  try{
+    return JSON.parse(strWhitelist);
+  }catch(ex) {
+    console.error(`Can't parse whitelist: [${strWhitelist}]`);
+    setTimeout(SaveWhitelistFromAPI, 5000);
+    throw(ex);
+  }
+}
+
+function IsInWhiteList(url){
+  try{
+    var whitelist = GetWhitelist();
+  }catch{
+    /* 
+      if withelist doen't exits, dont send data. 
+      Better to fail to send data than to send
+      inapropiate data.
+    */
+    return false;
+  }
+  for (var i=0; i<whitelist.length; i++){
+    var regEx = RegExp(whitelist[i].regex);
+    if(regEx.test(url)){
+      return true;
+    }
+  }
+  return false;
+}
+
+
+/* ============================================*/
 
 function FormatDuration(d) {
   if (d < 0) { return "?"; }
@@ -65,6 +131,12 @@ function Update(dateTimeStart, tabId, url) {
     if (url == History[tabId][0][1]) { return; }
   } else { History[tabId] = []; }
 
+
+  //Check if url is in whitelist
+  if(!IsInWhiteList(url)){
+    url=NOT_IN_WHITELIST;
+  }
+
   // Add to the beginning of the array.
   History[tabId].unshift([dateTimeStart, url]);
 
@@ -77,10 +149,12 @@ function Update(dateTimeStart, tabId, url) {
   chrome.browserAction.setPopup({ 'tabId': tabId, 'popup': "popup.html#tabId=" + tabId });
 
   /* Sends the new site data and the previous site, including end datetime */
-  let newURL = getUsageData(tabId, 0);
-  let previousURL = getUsageData(tabId, 1);
-  let usageData = previousURL != null ? [newURL, previousURL] : [newURL];
-  SendDataToServer(usageData);
+  let usageData = [];
+  for(let i = 0; i <= 1; i++){
+    let data = GetUsageData(tabId, i);
+    if(null != data){ usageData.unshift(data) }
+  }
+  if(usageData.length > 0){SendDataToServer(usageData);}
 }
 
 
@@ -107,6 +181,8 @@ function UpdateBadges() {
     chrome.browserAction.setBadgeText({ 'tabId': parseInt(tabId), 'text': description });
   }
 }
+
+SaveWhitelistFromAPI();
 
 setInterval(UpdateBadges, 1000);
 
