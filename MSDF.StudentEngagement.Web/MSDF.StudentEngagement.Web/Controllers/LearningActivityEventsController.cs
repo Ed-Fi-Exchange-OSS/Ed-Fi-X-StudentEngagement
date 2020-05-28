@@ -49,11 +49,14 @@ namespace MSDF.StudentEngagement.Web.Controllers
         //public async Task<ActionResult> GetById(int id) { return Ok("Resource"); }
 
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody]EncryptionModel encryptionModel)
+        public async Task<ActionResult> Post([FromBody]string cipherText)
         {
+            var privateKey = RSAEncryptionProvider.GetPrivateKeyParameters();
+            var decryptedData = RSAEncryptionProvider.Decrypt(cipherText, privateKey);
+
             // Validate encryptedPayload by trying to decrypt payload into final request model.
-            var decryptedData = _encryptionProvider.Decrypt(encryptionModel, _configuration["encryptionExportedKey"]);
             if (decryptedData == null) { return BadRequest("Invalid string"); }
+
 
             List<LearningActivityEventModel> learningActivityEventModelsList = 
                 Newtonsoft.Json.JsonConvert.DeserializeObject<List<LearningActivityEventModel>>(decryptedData)
@@ -71,7 +74,7 @@ namespace MSDF.StudentEngagement.Web.Controllers
                 .Select(app => new { app = app["app"], regex = app["regex"] })
                 .ToList();
             return whitelist.Any(itm => Regex.IsMatch(url, itm.regex) );
-        }
+        }        
 
     }
 }

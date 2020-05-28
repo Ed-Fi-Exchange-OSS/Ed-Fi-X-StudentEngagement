@@ -5,7 +5,7 @@ This plugin was based on https://github.com/google/page-timer/ with Apache Licen
 // history should be an array of objects.
 // History contaings History[tabId][0][0] = StartDate History[tabId][0][1] = URL
 var History = {};
-var EncryptionService = new EncryptionService();
+//var EncryptionService = new EncryptionService();
 var UserInfo = {email: "", id: "" };
 /* key used in localstorage for the whitelist */
 const WHITELIST_KEY = "whitelist"
@@ -50,72 +50,12 @@ function SendDataToServer(data) {
   // MVP: For now we will ingore the response.
 
   let jsonPayload = JSON.stringify(data);
-  EncryptionService.encrypt(jsonPayload, config.encryptionExportedKey)
-    .then(encrypted => {
-      xhr.send(JSON.stringify(encrypted));
-    });
+  
+  let cypherText = EncryptionRCAService.encrypt(config.PublicPemKey, jsonPayload);
+  xhr.send(JSON.stringify(cypherText));
 }
 /* ============================================*/
 
-/* ============ Whitelist =====================*/
-function SaveWhitelistFromAPI(){
-  var xhr = new XMLHttpRequest();
-  var url = config.api.Whitelist;
-  xhr.open("GET", url, true);
-  xhr.onload = function (){
-    if (xhr.readyState === 4) {
-      if (xhr.status === 200) {      
-          var strWhitelist = xhr.responseText;
-          /* TODO: Check that the object is correct*/
-          localStorage.setItem(WHITELIST_KEY, strWhitelist)
-      } else {
-          console.error(xhr.statusText);
-          setTimeout(SaveWhitelistFromAPI, 5000)
-      }
-    }    
-  };
-  xhr.send(null);
-}
-
-function GetWhitelist(){
-  var strWhitelist = localStorage.getItem(WHITELIST_KEY);
-  if(strWhitelist == null){ 
-    error = "No whitelist in localstorage";
-    console.error(error);
-    setTimeout(SaveWhitelistFromAPI, 5000);
-    throw(error);
-  }
-  try{
-    return JSON.parse(strWhitelist);
-  }catch(ex) {
-    console.error(`Can't parse whitelist: [${strWhitelist}]`);
-    setTimeout(SaveWhitelistFromAPI, 5000);
-    throw(ex);
-  }
-}
-
-function IsInWhiteList(url){
-  try{
-    var whitelist = GetWhitelist();
-  }catch{
-    /* 
-      if withelist doen't exits, dont send data. 
-      Better to fail to send data than to send
-      inapropiate data.
-    */
-    return false;
-  }
-  for (var i=0; i<whitelist.length; i++){
-    var regEx = RegExp(whitelist[i].regex);
-    if(regEx.test(url)){
-      return true;
-    }
-  }
-  return false;
-}
-
-
-/* ============================================*/
 
 function FormatDuration(d) {
   if (d < 0) { return "?"; }
@@ -133,7 +73,7 @@ function Update(dateTimeStart, tabId, url) {
 
 
   //Check if url is in whitelist
-  if(!IsInWhiteList(url)){
+  if(!WhitelistService.IsInWhiteList(url)){
     url=NOT_IN_WHITELIST;
   }
 
@@ -182,7 +122,7 @@ function UpdateBadges() {
   }
 }
 
-SaveWhitelistFromAPI();
+WhitelistService.SaveWhitelistFromAPI();
 
 setInterval(UpdateBadges, 1000);
 

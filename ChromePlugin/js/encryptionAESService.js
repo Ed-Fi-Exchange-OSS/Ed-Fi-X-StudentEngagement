@@ -1,4 +1,4 @@
-var EncryptionService = function () {
+var EncryptionServiceAESGCM = function () {
     SALT = 'a-unique-salt'
     DERIVED_KEY_LENGHT = 256; /* bits*/
 
