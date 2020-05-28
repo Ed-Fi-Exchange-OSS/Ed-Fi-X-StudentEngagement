@@ -38,7 +38,7 @@ namespace MSDF.StudentEngagement.Resources.Providers.Encryption
         }
 
         public static string Encrypt(string textToEncrypt, RSAParameters rsaKey) {
-            var byteConverter = new UnicodeEncoding();
+            var byteConverter = new UTF8Encoding();
 
             byte[] decryptedData = byteConverter.GetBytes(textToEncrypt);
             byte[] encryptedData;
@@ -54,7 +54,7 @@ namespace MSDF.StudentEngagement.Resources.Providers.Encryption
 
         public static string Decrypt(string textToDecrypt, RSAParameters rsaKey)
         {
-            var byteConverter = new UnicodeEncoding();
+            var byteConverter = new UTF8Encoding();
 
             byte[] encryptedData = Convert.FromBase64String(textToDecrypt);
             byte[] decryptedData;

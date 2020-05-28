@@ -38,7 +38,10 @@ namespace MSDF.StudentEngagement.Web.Controllers
 
             var encryptedText = RSAEncryptionProvider.Encrypt("Here", publicKey);
             var decryptedText = RSAEncryptionProvider.Decrypt(encryptedText, privateKey);
-            return Ok($"enc:{encryptedText} dec:{decryptedText}");
+            //var enc = "JV52QPCZ6+63MeywQynZjNl/YMW/ufU5xOVoUCXNlFeVtdUo+NqxuDl7JykwfC3injmlvmYri0BqIstEG6gdGHm78hExnHv2FpecV3g2teVP8YoJvkM8Z4sbQVhA2bLfHBgZF00O6aqTDYOwaMb6dGglXW8BCup0Kkw1bxUBDJkroLf9MLgXh5AM5TYj/fw7nPeNeeoFujLZgwRjUiIFgtDQaWXaWoe4dJ8b9YBOieLM+Fw/q8tm5M/gKvTCoRIfdGGMug+h3uoE4rSh7Ro4gUaQe09Yx34B21DUw+vflkxBSyej1ffISYwZVdy+/3+VjkIoC8g8evb6ERmspcYTug==";
+            var enc = "DNT/yYiHoyfn0EIDln7qgJS5HRXLKaaAmWQ6KPLjqwC7GvTH9fUbcoyWFeT72oyDXMDFHKaSXsCdV/HeiFbuWjWLZwC3tHHbmmLjc1vbPUVVk3B49KAjDQHc3Hnyt60B4TIt09z/vIqvTOqvGPxsz1WKOeQR/tIuPZASpAmOBAemGjnm+Z3Jh+Fw5VhxKV7NTqCaVjQxDxMTid3gG5h5QeynC1PGjj3g2Tyxhi0ErpSU8N14Bis+xC4Q0hriKhJdyNaUugTllLla/PEulBJMgTZuypD+HFqm3vdj3kz+FRbG5VVsBAQwjWKiKq1nkY0jQP98D8AnonW8wFrM2X4E3A==";
+            var dec = RSAEncryptionProvider.Decrypt(enc, privateKey);
+            return Ok($"enc:{encryptedText} dec:{decryptedText} dec:{dec}");
         }
 
         //[HttpGet]
