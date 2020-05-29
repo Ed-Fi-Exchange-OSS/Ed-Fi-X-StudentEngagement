@@ -32,7 +32,7 @@ namespace MSDF.StudentEngagement.Resources.Services.LearningActivityEvents
             foreach (var model in modelList)
             {
                 var entity = MapToStudentLearningEventLog(model);
-                await _studentLearningEventLogCommands.AddAsync(entity);
+                await _studentLearningEventLogCommands.AddorUpdateAsync(entity);
             }
         }
 
