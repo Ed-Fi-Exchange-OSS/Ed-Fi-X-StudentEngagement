@@ -1,18 +1,11 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
 namespace MSDF.StudentEngagement.Resources.Providers.Encryption
 {
-    public interface IRSAEncryptionProvider
-    {
-
-    }
-    public class RSAEncryptionProvider : IRSAEncryptionProvider
+    public class RSAEncryptionProvider
     {
         private const string privateKeyName = "rsaPrivateKey.xml";
         private const string publicKeyName  = "rsaPublicKey.xml";

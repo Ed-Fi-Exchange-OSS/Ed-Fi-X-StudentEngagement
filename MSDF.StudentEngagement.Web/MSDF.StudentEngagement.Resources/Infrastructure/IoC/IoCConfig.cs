@@ -22,7 +22,6 @@ namespace MSDF.StudentEngagement.Resources.Infrastructure.IoC
 
         private static void RegisterProviders(IServiceCollection container)
         {
-            container.AddScoped(typeof(IEncryptionProvider), typeof(AESGCMEncryptionProvider));
         }
 
         private static void RegisterServicesByConvention<TMarker>(IServiceCollection container)

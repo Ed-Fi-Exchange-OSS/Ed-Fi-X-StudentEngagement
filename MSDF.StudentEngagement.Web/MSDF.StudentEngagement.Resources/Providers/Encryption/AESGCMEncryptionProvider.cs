@@ -1,58 +1,35 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Text.Encodings.Web;
-using Newtonsoft.Json;
 
 namespace MSDF.StudentEngagement.Resources.Providers.Encryption
 {
-    public interface IEncryptionProvider
+    public class AESGCMEncryptionProvider
     {
-        string Decrypt(string jsonEncryptionModel, string exportedKey);
-        string Decrypt(EncryptionModel encryptionModel, string exportedKey);
-    }
-
-    public class AESGCMEncryptionProvider: IEncryptionProvider
-    {
-        const int TAG_LENGHT = 128;/* bits*/
-        const int TAG_LENGHT_BYTES = TAG_LENGHT / 8;/* bytes*/
-        public string Decrypt(EncryptionModel encryptionModel, string exportedKey)
+        public static string Decrypt(string cypherTextBase64, string keyBase64, string ivBase64)
         {
+            var keyArr = Convert.FromBase64String(keyBase64);
+            var ivArr = Convert.FromBase64String(ivBase64);
+            var cipherTextArr = Convert.FromBase64String(cypherTextBase64);
 
-            var key =  GenEncryptionKeyFromExportedKey(exportedKey);
-            var nonce = encryptionModel.ibiv.ToArray();
+            var aes = new AesGcm(keyArr);
 
-            ExtractCipherAndTag(encryptionModel, out byte[] ciphertext, out byte[] tag);
-
+            ExtractCipherAndTag(cipherTextArr, out byte[] ciphertext, out byte[] tag);
             var plainTextBytes = new byte[ciphertext.Length];
 
-            AesGcm aesGcm = new AesGcm(key);
-            aesGcm.Decrypt(nonce, ciphertext, tag, plainTextBytes);
+            aes.Decrypt(ivArr, ciphertext, tag, plainTextBytes);
 
-            return Encoding.UTF8.GetString(plainTextBytes);
+            return Encoding.Unicode.GetString(plainTextBytes);
         }
 
-        private static void ExtractCipherAndTag(EncryptionModel encryptionModel, out byte[] ciphertext, out byte[] tag)
+        private static void ExtractCipherAndTag(byte[] cipherTextArr, out byte[] ciphertext, out byte[] tag)
         {
-            var ct = encryptionModel.ibct.ToArray();
-            ciphertext = new byte[ct.Length - TAG_LENGHT_BYTES];
-            tag = new byte[TAG_LENGHT_BYTES];
-            Array.Copy(ct, 0, ciphertext, 0, ct.Length - TAG_LENGHT_BYTES);
-            Array.Copy(ct, ct.Length - TAG_LENGHT_BYTES, tag, 0, TAG_LENGHT_BYTES);
-        }
-
-        public string Decrypt(string jsonEncryptionModel, string exportedKey)
-        {
-            var encryptionModel = JsonConvert.DeserializeObject<EncryptionModel>(jsonEncryptionModel);
-            return Decrypt(encryptionModel, exportedKey);  
-        }
-        
-        private byte[] GenEncryptionKeyFromExportedKey(string exportedKey)
-        {
-            return Convert.FromBase64String(exportedKey);
+            var tagLengthInBytes = 128 / 8;
+            var ct = cipherTextArr;
+            ciphertext = new byte[ct.Length - tagLengthInBytes];
+            tag = new byte[tagLengthInBytes];
+            Array.Copy(ct, 0, ciphertext, 0, ct.Length - tagLengthInBytes);
+            Array.Copy(ct, ct.Length - tagLengthInBytes, tag, 0, tagLengthInBytes);
         }
     }
 }
