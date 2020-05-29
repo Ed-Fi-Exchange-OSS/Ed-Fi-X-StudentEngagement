@@ -11,8 +11,17 @@ namespace MSDF.StudentEngagement.Persistence.Infrastructure.IoC
     {
         public static void RegisterDependencies(IServiceCollection container, IConfiguration configuration)
         {
+            // TODO: In the future it would be nice to have an implementation
+            //       that can support MsSQL, MySQL, PostreSQL and SQLLite
+            // Follow this link to implement different contexts with their own migrations.
+            // https://docs.microsoft.com/en-us/ef/core/managing-schemas/migrations/providers?tabs=dotnet-core-cli
+
+            // For the time being you will have to comment/uncomment the provider you desire
+            // and then recreate the migrations.
+
             //container.AddDbContext<DatabaseContext>(options =>
             //    options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+
             container.AddDbContext<DatabaseContext>(options =>
                 options.UseMySQL(configuration.GetConnectionString("DefaultConnection")));
 
