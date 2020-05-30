@@ -1,4 +1,16 @@
 
+function Get-PostGreSQLConnection($connectionString) {
+    try {
+        $conn = New-Object System.Data.Odbc.OdbcConnection ("Driver={PostgreSQL UNICODE(x64)};" + $connectionString) 
+        $conn.Open() 
+    }
+    catch {
+        if ($null -ne $conn) { $conn.Dispose() }
+        throw
+    }
+    return $conn
+}
+
 function Get-MySQLConnection($connectionString) {
     #needs mysql-connector : choco install MySql Connector/NET
 
@@ -43,9 +55,10 @@ function Get-QueryScalar($query, $conn) {
     return $cmd.ExecuteScalar()
 }
 
-function Execute-NonQuery($query, $conn) {
-    $cmd = $conn.CreateCommand()
+function Execute-NonQuery($query, $conn, $transaction = $null) {
+    $cmd = $conn.CreateCommand()    
     $cmd.CommandText = $query
+    if($null -ne $transaction){ $cmd.Transaction = $transaction }
     $rowsInserted = $cmd.ExecuteNonQuery()
     return $rowsInserted
 }

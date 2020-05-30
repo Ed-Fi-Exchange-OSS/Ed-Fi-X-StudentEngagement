@@ -59,7 +59,11 @@ Function Install-Prerequisites() {
     Install-GoogleChrome
     
     #install db libraries
-    choco install mysql-connector -y
+    #choco install mysql-connector -y
+    
+    #install PostGreSQL odbc driver
+    choco install psqlodbc -y
+    
     # TODO: Ensure that MSSQL module dont exists before installing
     if ( $null -eq (Get-InstalledModule -Name "SQLServer" -ErrorAction Ignore)) {         
         Write-Host "Adding powershell SQLServer module"

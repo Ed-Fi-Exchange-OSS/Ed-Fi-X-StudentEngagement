@@ -1,10 +1,10 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
-using MySql.Data.EntityFrameworkCore.Metadata;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace MSDF.StudentEngagement.Persistence.Migrations
 {
-    public partial class Initial_MySql : Migration
+    public partial class Initial_PostGreSQL : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -28,7 +28,7 @@ namespace MSDF.StudentEngagement.Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     StudentUSI = table.Column<int>(nullable: false),
                     StudentUniqueId = table.Column<string>(maxLength: 32, nullable: true),
                     StudentStateIdentificationCode = table.Column<string>(maxLength: 60, nullable: true),
@@ -76,7 +76,7 @@ namespace MSDF.StudentEngagement.Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     StudentUSI = table.Column<int>(nullable: false),
                     StudentUniqueId = table.Column<string>(maxLength: 32, nullable: true),
                     DeviceId = table.Column<string>(maxLength: 32, nullable: true),
@@ -92,6 +92,83 @@ namespace MSDF.StudentEngagement.Persistence.Migrations
                 {
                     table.PrimaryKey("PK_StudentLearningEventLog", x => x.Id);
                 });
+
+
+            SQL_CreateView(migrationBuilder);
+        }
+
+        private void SQL_CreateView(MigrationBuilder migrationBuilder)
+        {
+
+            string query = @"
+CREATE OR REPLACE VIEW public.StudentEngagementReport
+AS SELECT st.""Id"",
+    st.""StudentUSI"",
+    st.""StudentUniqueId"",
+    st.""StudentStateIdentificationCode"",
+    st.""IdentityElectronicMailAddress"",
+    st.""DeviceId"",
+    st.""LocalEducationAgencyName"",
+    st.""SchoolName"",
+    st.""SchoolYear"",
+    st.""SchoolCurrentGradeLevelDescriptorCodeValue"",
+    st.""SchoolTypeDescriptorCodeValue"",
+    st.""ExitWithdrawalDate"",
+    st.""FirstName"",
+    st.""MiddleName"",
+    st.""LastSurname"",
+    concat(st.""LastSurname"", ' ', st.""FirstName"", COALESCE(concat(' ', st.""MiddleName""), ''::text)) AS ""StudentFullNameLFM"",
+    st.""BirthDate"",
+    st.""BirthSexDescriptorCodeValue"",
+    st.""Ethnicity"",
+    st.""Race_AmericanIndianAlaskanNative"",
+    st.""Race_Asian"",
+    st.""Race_BlackAfricaAmerican"",
+    st.""Race_NativeHawaiianPacificIslander"",
+    st.""Race_White"",
+    st.""Race_ChooseNotToRespond"",
+    st.""Race_Other"",
+    st.""DisabilityStatusDescriptorCodeValue"",
+    st.""EconomicallyDisadvantageDescriptorCodeValue"",
+    st.""ELLStatusDescriptorCodeValue"",
+    st.""MigrantDescriptorCodeValue"",
+    st.""HomelessDescriptorCodeValue"",
+    st.""FosterDescriptorCodeValue"",
+    st.""F504DescriptorCodeValue"",
+    st.""ContactInfoFirstName"",
+    st.""ContactInfoLastSurname"",
+    st.""ContactInfoRelationToStudent"",
+    st.""ContactInfoCellPhoneNumber"",
+    st.""ContactInfoElectronicMailAddress"",
+    concat(st.""ContactInfoLastSurname"", ', ', st.""ContactInfoFirstName"", '(', st.""ContactInfoRelationToStudent"", ') - ', st.""ContactInfoCellPhoneNumber"") AS ""ContactInfo"",
+        CASE
+            WHEN te.""StudentElectronicMailAddress"" IS NOT NULL THEN 'Engaged today'::text
+            ELSE 'Not Engaged today'::text
+        END AS ""LoggedToday"",
+    le.""DateLastEngagement"",
+    le.""DaysSinceLastEngagement""
+   FROM ""StudentInformation"" st
+     LEFT JOIN(SELECT teurl.""StudentElectronicMailAddress"",
+            count(0) AS ""URLsVisitedToday"",
+            avg(teurl.""TimeSpent"") AS ""AVGTimeSpent""
+           FROM(SELECT slel.""StudentElectronicMailAddress"",
+                    slel.""LeaningAppUrl"",
+                    slel.""UTCStartDate"",
+                    max(slel.""UTCEndDate"") AS ""UTCEndDate"",
+                    max(slel.""TimeSpent"") AS ""TimeSpent""
+                   FROM ""StudentLearningEventLog"" slel
+                  WHERE slel.""UTCStartDate"" > CURRENT_DATE
+                  GROUP BY slel.""StudentElectronicMailAddress"", slel.""LeaningAppUrl"", slel.""UTCStartDate"") teurl
+          GROUP BY teurl.""StudentElectronicMailAddress"") te ON st.""IdentityElectronicMailAddress""::text = te.""StudentElectronicMailAddress""::text
+     LEFT JOIN(SELECT lg.""StudentElectronicMailAddress"",
+            max(lg.""UTCStartDate"") AS ""DateLastEngagement"",
+            date_part('day'::text, timezone('utc'::text, now()) - max(lg.""UTCStartDate"")) AS ""DaysSinceLastEngagement""
+           FROM ""StudentLearningEventLog"" lg
+          GROUP BY lg.""StudentElectronicMailAddress"") le ON st.""IdentityElectronicMailAddress""::text = le.""StudentElectronicMailAddress""::text;
+            ";
+
+            migrationBuilder.Sql(query);
+
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

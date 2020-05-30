@@ -5,7 +5,7 @@ Import-Module "$PSScriptRoot\Prettify" -Force
 function Test-HasLogDataStructures($conn) {
     # Check if studentinformation table exists
     $database = $conn.Database
-    $queryStudentInformation = "Select Count(*) as N From information_schema.tables WHERE table_schema = '$database' AND table_name = 'studentinformation';"    
+    $queryStudentInformation = "Select Count(*) as N From information_schema.tables WHERE upper(table_name) = upper('StudentInformation');"
     $rowCount = Get-QueryScalar $queryStudentInformation $conn
 
     return ($rowCount -eq 1)
@@ -13,7 +13,7 @@ function Test-HasLogDataStructures($conn) {
 
 function Get-StudentInfoRowCount($conn) {
     $database = $conn.Database    
-    $query = "Select Count(*) From $database.studentinformation"
+    $query = "Select Count(*) From ""StudentInformation"""
     return Get-QueryScalar $query $conn
 }
 
@@ -22,9 +22,11 @@ function Write-StudentInfo($conn, $reader) {
     try {
         for ($i = 1; $i -lt $reader.Length; $i++ ) {
             $query = $reader[0][0] + $reader[$i][0]
-            Execute-NonQuery $query $conn
+            Execute-NonQuery $query $conn $tran
+            Write-Host -NoNewline "."
         }
         $tran.Commit()
+        Write-Host
     }
     catch {
         $tran.Rollback()
@@ -33,15 +35,15 @@ function Write-StudentInfo($conn, $reader) {
 }
 
 function Get-StudentInfo($destDatabase, $conn) {
-    $exportQuery = "DECLARE @tableName as varchar(50) = '$destDatabase.studentinformation'
+    $exportQuery = "DECLARE @tableName as varchar(50) = 'public.""StudentInformation""'
     Select
         'Insert into ' + @tableName + ' (
-            StudentUSI, StudentUniqueId, StudentStateIdentificationCode, IdentityElectronicMailAddress, DeviceId
-            , LocalEducationAgencyName, SchoolName, SchoolYear, SchoolCurrentGradeLevelDescriptorCodeValue, SchoolTypeDescriptorCodeValue, ExitWithdrawalDate
-            , FirstName, MiddleName, LastSurname, BirthDate, BirthSexDescriptorCodeValue
-            , Ethnicity, Race_AmericanIndianAlaskanNative, Race_Asian, Race_BlackAfricaAmerican, Race_NativeHawaiianPacificIslander, Race_White, Race_ChooseNotToRespond, Race_Other
-            , DisabilityStatusDescriptorCodeValue, EconomicallyDisadvantageDescriptorCodeValue, ELLStatusDescriptorCodeValue, MigrantDescriptorCodeValue, HomelessDescriptorCodeValue, FosterDescriptorCodeValue, F504DescriptorCodeValue
-            , ContactInfoLastSurname, ContactInfoFirstName, ContactInfoRelationToStudent, ContactInfoCellPhoneNumber, ContactInfoElectronicMailAddress
+            ""StudentUSI"", ""StudentUniqueId"", ""StudentStateIdentificationCode"", ""IdentityElectronicMailAddress"", ""DeviceId""
+            , ""LocalEducationAgencyName"", ""SchoolName"", ""SchoolYear"", ""SchoolCurrentGradeLevelDescriptorCodeValue"", ""SchoolTypeDescriptorCodeValue"", ""ExitWithdrawalDate""
+            , ""FirstName"", ""MiddleName"", ""LastSurname"", ""BirthDate"", ""BirthSexDescriptorCodeValue""
+            , ""Ethnicity"", ""Race_AmericanIndianAlaskanNative"", ""Race_Asian"", ""Race_BlackAfricaAmerican"", ""Race_NativeHawaiianPacificIslander"", ""Race_White"", ""Race_ChooseNotToRespond"", ""Race_Other""
+            , ""DisabilityStatusDescriptorCodeValue"", ""EconomicallyDisadvantageDescriptorCodeValue"", ""ELLStatusDescriptorCodeValue"", ""MigrantDescriptorCodeValue"", ""HomelessDescriptorCodeValue"", ""FosterDescriptorCodeValue"", ""F504DescriptorCodeValue""
+            , ""ContactInfoLastSurname"", ""ContactInfoFirstName"", ""ContactInfoRelationToStudent"", ""ContactInfoCellPhoneNumber"", ""ContactInfoElectronicMailAddress""
             ) Values '  as cmd
     
     Union ALL
@@ -50,7 +52,7 @@ function Get-StudentInfo($destDatabase, $conn) {
             + Cast (StudentUSI as VarChar(10) ) + ',''' + StudentUniqueId + ''',NULL,''' + ElectronicMailAddress  + ''',NULL' 
             + ',''' + LocalEducationAgencyName + ''',''' + SchoolName + ''', 2020, ''' + EntryGradeLevelDescriptorCodeValue  + ''',''' + 'TODO SchoolTypeDescriptorCodeValue' + ''',' + IsNull('''' + Convert(varchar(100), ExitWithdrawDate, 120 ) + '''', 'NULL') 
             + ',''' + FirstName + ''',' + IsNull('''' + MiddleName + '''','NULL') + ',''' + LastSurname + ''',''' + Convert(varchar(100), BirthDate, 120 ) + ''',''' + SexDescriptorCodeValue + '''' 
-            + ',''' + Ethnicity + ''',' + Cast(Race_AmericanIndianAlaskanNative as varchar(2))  + ',' + Cast(Race_Asian as varchar(2)) + ',' + Cast(Race_BlackAfricanAmerican as varchar(2)) + ',' + Cast(Race_NativeHawaiianPacificIslander as varchar(2)) + ',' + Cast(Race_White as varchar(2)) + ',' + Cast(Race_ChooseNotToRespond as varchar(2)) + ',' + Cast(Race_Other as varchar(2))
+            + ',''' + Ethnicity + ''',' + Cast(Race_AmericanIndianAlaskanNative as varchar(5))  + ',' + Cast(Race_Asian as varchar(5)) + ',' + Cast(Race_BlackAfricanAmerican as varchar(5)) + ',' + Cast(Race_NativeHawaiianPacificIslander as varchar(5)) + ',' + Cast(Race_White as varchar(5)) + ',' + Cast(Race_ChooseNotToRespond as varchar(5)) + ',' + Cast(Race_Other as varchar(5))
             + ', NULL, NULL, ' + IsNull('''' + LimitedEnglishProficiency + '''', 'NULL') + ',' + IsNull('''' + MigrantDescriptorCodeValue + '''', 'NULL') + ',' + IsNull('''' + HomelessDescriptorCodeValue + '''', 'NULL') + ', NULL,' + IsNull('''' + F504DescriptorCodeValue + '''', 'NULL') 
             + ',' + IsNull('''' + ContactInfoLastSurname + '''', 'NULL') + ','  + IsNull('''' + ContactInfoFirstName + '''', 'NULL') + ','  + IsNull('''' + ContactInfoRelationToStudent + '''', 'NULL') + ','  + IsNull('''' + ContactInfoCellPhoneNumber + '''', 'NULL') + ','  + IsNull('''' + ContactInfoElectronicMailAddress + '''', 'NULL') 
             + ')' as cmd
@@ -64,13 +66,13 @@ function Get-StudentInfo($destDatabase, $conn) {
                 , eo.NameOfInstitution LocalEducationAgencyName, so.NameOfInstitution SchoolName, ssa.EntryDate, gld.CodeValue EntryGradeLevelDescriptorCodeValue, ssa.ExitWithdrawDate
                 -- Race and Ethnicity 
                 , (CASE WHEN seoa.HispanicLatinoEthnicity=1 then 'Hispanic' ELSE 'Non Hispanic' END) Ethnicity
-                , Case when sr1.RaceDescriptorId is not null then 1 else 0 end as 'Race_AmericanIndianAlaskanNative'
-                , Case when sr2.RaceDescriptorId is not null then 1 else 0 end as 'Race_Asian'
-                , Case when sr3.RaceDescriptorId is not null then 1 else 0 end as 'Race_BlackAfricanAmerican'
-                , Case when sr4.RaceDescriptorId is not null then 1 else 0 end as 'Race_ChooseNotToRespond'
-                , Case when sr5.RaceDescriptorId is not null then 1 else 0 end as 'Race_NativeHawaiianPacificIslander'
-                , Case when sr6.RaceDescriptorId is not null then 1 else 0 end as 'Race_Other'
-                , Case when sr7.RaceDescriptorId is not null then 1 else 0 end as 'Race_White'
+                , Case when sr1.RaceDescriptorId is not null then 'TRUE' else 'FALSE' end as 'Race_AmericanIndianAlaskanNative'
+                , Case when sr2.RaceDescriptorId is not null then 'TRUE' else 'FALSE' end as 'Race_Asian'
+                , Case when sr3.RaceDescriptorId is not null then 'TRUE' else 'FALSE' end as 'Race_BlackAfricanAmerican'
+                , Case when sr4.RaceDescriptorId is not null then 'TRUE' else 'FALSE' end as 'Race_ChooseNotToRespond'
+                , Case when sr5.RaceDescriptorId is not null then 'TRUE' else 'FALSE' end as 'Race_NativeHawaiianPacificIslander'
+                , Case when sr6.RaceDescriptorId is not null then 'TRUE' else 'FALSE' end as 'Race_Other'
+                , Case when sr7.RaceDescriptorId is not null then 'TRUE' else 'FALSE' end as 'Race_White'
     
                 -- Programs and Indicators (find by SELECT CodeValue from edfi.Descriptor WHERE Namespace like '%ProgramType%')
                 , lep.CodeValue LimitedEnglishProficiency
@@ -131,7 +133,7 @@ function Import-StudentInfo($sourceConnStr, $destConnStr) {
 
     try {
 
-        $dConn = Get-MySQLConnection $destConnStr
+        $dConn = Get-PostGreSQLConnection $destConnStr
         Write-Host "Connected to Destination"
         $sConn = get-MSSQLConnection $sourceConnStr
         Write-Host "Connected to Sourse"
@@ -148,7 +150,7 @@ function Import-StudentInfo($sourceConnStr, $destConnStr) {
         $testRowCount = Get-StudentInfoRowCount $dConn
         if ($testRowCount -gt 0) {    
             Write-Warning "StudentInformation table have data. Cleaning"
-            $truncateQuery = "TRUNCATE TABLE " + $dConn.Database + ".StudentInformation"
+            $truncateQuery = "TRUNCATE TABLE ""StudentInformation"""
             $null = Execute-NonQuery $truncateQuery $dConn
         }
         Write-Host "* Destination StudentInformation is empty"

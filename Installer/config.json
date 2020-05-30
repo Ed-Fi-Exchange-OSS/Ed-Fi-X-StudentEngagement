@@ -1,10 +1,10 @@
 {
-    "EncryptionKey":"4Pmra8SUSrgdU3z/rc+Pf1pQzCK9mdb+jaVc+9cSmCE=",
-    "TempPathForBinaryDownloads":"C:\\temp\\edfi\\StudentEngegement\\",
+    "EncryptionKey": "4Pmra8SUSrgdU3z/rc+Pf1pQzCK9mdb+jaVc+9cSmCE=",
+    "TempPathForBinaryDownloads": "C:\\temp\\edfi\\StudentEngegement\\",
     "BinaryMetadata": {
-        "ApiBinaries":{
+        "ApiBinaries": {
             "Name": "API",
-            "BinaryUrl":"http://www.toolwise.net/StudentEngagementAPI.zip",
+            "BinaryUrl": "http://www.toolwise.net/StudentEngagementAPI.zip",
             "InstallPathForBinary": "C:\\inetpub\\wwwroot\\StudentEngegement",
             "ConnectionString": {
                 "StudentLearningEventsConnectionString":"",
@@ -13,11 +13,11 @@
         },
         "ChromeExtensionUrl": {
             "Name": "ChromePlugin",
-            "BinaryUrl":"http://www.toolwise.net/StudentEngagementExtension.zip",
+            "BinaryUrl": "http://www.toolwise.net/StudentEngagementExtension.zip",
             "InstallPathForBinary": "C:\\temp\\edfi\\StudentEngegement\\"
         }
     },
-    "IISSettings": { 
+    "IISSettings": {
         "ParentSiteName": "Default Web Site",
         "ApplicationPool": "DefaultAppPool",
         "WebSiteName": "StudentEngagement"

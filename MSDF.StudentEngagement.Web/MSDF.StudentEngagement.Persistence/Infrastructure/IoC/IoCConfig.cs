@@ -22,8 +22,11 @@ namespace MSDF.StudentEngagement.Persistence.Infrastructure.IoC
             //container.AddDbContext<DatabaseContext>(options =>
             //    options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
+            //container.AddDbContext<DatabaseContext>(options =>
+            //    options.UseMySQL(configuration.GetConnectionString("DefaultConnection")));
+
             container.AddDbContext<DatabaseContext>(options =>
-                options.UseMySQL(configuration.GetConnectionString("DefaultConnection")));
+                options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
 
             RegisterCommandsAndQueriesByConvention<IPersistenceMarker>(container);
         }
