@@ -24,7 +24,7 @@
   "background": {
     "scripts": [
       "config.js",
-      "js/encryptionRCAService.js",
+      "js/encryptionMixed.js",
       "js/jsencrypt-2.3.1.js",
       "js/whitelistService.js",
       "background.js"

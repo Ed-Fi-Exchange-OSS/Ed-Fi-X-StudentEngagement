@@ -6,7 +6,10 @@ This plugin was based on https://github.com/google/page-timer/ with Apache Licen
 // History contaings History[tabId][0][0] = StartDate History[tabId][0][1] = URL
 var History = {};
 //var EncryptionService = new EncryptionService();
-var UserInfo = {email: "", id: "" };
+encryptionService = new EncryptionMixedService(config.PublicPemKey);
+
+var UserInfo = { email: "", id: "" };
+
 /* key used in localstorage for the whitelist */
 const WHITELIST_KEY = "whitelist"
 const NOT_IN_WHITELIST = "not_in_whitelist"
@@ -24,21 +27,21 @@ const DataPointType = {
   END: "end"
 }
 
-function GetUsageData(tabId, index){
+function GetUsageData(tabId, index) {
   const DATE_INDEX = 0;
   const URL_INDEX = 1;
 
-  if(!History[tabId][index]) {return null;}
-  if(History[tabId][index][URL_INDEX] == NOT_IN_WHITELIST) {return null;}
+  if (!History[tabId][index]) { return null; }
+  if (History[tabId][index][URL_INDEX] == NOT_IN_WHITELIST) { return null; }
 
   return { /*LearningActivityEventModel*/
     /* string */ DataPointType: index == 0 ? DataPointType.START : DataPointType.END,
-    /* string */ IdentityElectronicMailAddress : UserInfo.email,
-    /* string */ ReffererUrl : "",
-    /* string */ LeaningAppUrl : History[tabId][index][URL_INDEX],
-    /* DateTime */ UTCStartDateTime : History[tabId][index][DATE_INDEX],
-    /* DateTime */ UTCEndDateTime : index == 0 ? null : History[tabId][index - 1][0]
-   };
+    /* string */ IdentityElectronicMailAddress: UserInfo.email,
+    /* string */ ReffererUrl: "",
+    /* string */ LeaningAppUrl: History[tabId][index][URL_INDEX],
+    /* DateTime */ UTCStartDateTime: History[tabId][index][DATE_INDEX],
+    /* DateTime */ UTCEndDateTime: index == 0 ? null : History[tabId][index - 1][0]
+  };
 }
 
 function SendDataToServer(data) {
@@ -50,9 +53,12 @@ function SendDataToServer(data) {
   // MVP: For now we will ingore the response.
 
   let jsonPayload = JSON.stringify(data);
-  
-  let cypherText = EncryptionRCAService.encrypt(config.PublicPemKey, jsonPayload);
-  xhr.send(JSON.stringify(cypherText));
+
+  encryptionService
+    .encrypt(jsonPayload)
+    .then(encrypted => {
+      xhr.send(JSON.stringify(encrypted));
+    });
 }
 /* ============================================*/
 
@@ -73,8 +79,8 @@ function Update(dateTimeStart, tabId, url) {
 
 
   //Check if url is in whitelist
-  if(!WhitelistService.IsInWhiteList(url)){
-    url=NOT_IN_WHITELIST;
+  if (!WhitelistService.IsInWhiteList(url)) {
+    url = NOT_IN_WHITELIST;
   }
 
   // Add to the beginning of the array.
@@ -90,11 +96,11 @@ function Update(dateTimeStart, tabId, url) {
 
   /* Sends the new site data and the previous site, including end datetime */
   let usageData = [];
-  for(let i = 0; i <= 1; i++){
+  for (let i = 0; i <= 1; i++) {
     let data = GetUsageData(tabId, i);
-    if(null != data){ usageData.unshift(data) }
+    if (null != data) { usageData.unshift(data) }
   }
-  if(usageData.length > 0){SendDataToServer(usageData);}
+  if (usageData.length > 0) { SendDataToServer(usageData); }
 }
 
 

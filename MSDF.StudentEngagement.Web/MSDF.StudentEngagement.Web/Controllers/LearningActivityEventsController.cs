@@ -69,8 +69,7 @@ namespace MSDF.StudentEngagement.Web.Controllers
                 var aesKey = JsonConvert.DeserializeObject<AESKeyModel>(decryptedAESKey);
 
                 var payloadString = AESGCMEncryptionProvider.Decrypt(model.m, aesKey.k, aesKey.iv);
-                var payload = JsonConvert.DeserializeObject<LearningActivityEventModel>(payloadString);
-                //var payload = JsonConvert.DeserializeObject<List<LearningActivityEventModel>>(payloadString);
+                var payload = JsonConvert.DeserializeObject<List<LearningActivityEventModel>>(payloadString);
 
                 await _learningActivityEventsService.SaveLearningActivityEventAsync(payload);
 
