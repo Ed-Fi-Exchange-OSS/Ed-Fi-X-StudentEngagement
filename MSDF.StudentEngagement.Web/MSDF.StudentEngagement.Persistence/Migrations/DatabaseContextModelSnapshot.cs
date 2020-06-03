@@ -37,13 +37,29 @@ namespace MSDF.StudentEngagement.Persistence.Migrations
                         .HasColumnType("character varying(255)")
                         .HasMaxLength(255);
 
+                    b.Property<bool>("TrackingEnabled")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Website")
+                        .HasColumnType("character varying(255)")
+                        .HasMaxLength(255);
+
+                    b.Property<string>("WhitelistRegex")
                         .HasColumnType("character varying(255)")
                         .HasMaxLength(255);
 
                     b.HasKey("LearningAppIdentifier");
 
                     b.ToTable("LearningApp");
+
+                    b.HasData(
+                        new
+                        {
+                            LearningAppIdentifier = "schoology",
+                            AppUrl = "schoology.com",
+                            TrackingEnabled = true,
+                            WhitelistRegex = "^.*\\.schoology.com\\/.*"
+                        });
                 });
 
             modelBuilder.Entity("MSDF.StudentEngagement.Persistence.Models.StudentInformation", b =>
@@ -211,6 +227,10 @@ namespace MSDF.StudentEngagement.Persistence.Migrations
                         .HasColumnType("character varying(1024)")
                         .HasMaxLength(1024);
 
+                    b.Property<string>("LearningAppIdentifier")
+                        .HasColumnType("character varying(60)")
+                        .HasMaxLength(60);
+
                     b.Property<string>("ReffererUrl")
                         .HasColumnType("character varying(1024)")
                         .HasMaxLength(1024);
@@ -237,7 +257,16 @@ namespace MSDF.StudentEngagement.Persistence.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("LearningAppIdentifier");
+
                     b.ToTable("StudentLearningEventLog");
+                });
+
+            modelBuilder.Entity("MSDF.StudentEngagement.Persistence.Models.StudentLearningEventLog", b =>
+                {
+                    b.HasOne("MSDF.StudentEngagement.Persistence.Models.LearningApp", "LearningApp")
+                        .WithMany()
+                        .HasForeignKey("LearningAppIdentifier");
                 });
 #pragma warning restore 612, 618
         }

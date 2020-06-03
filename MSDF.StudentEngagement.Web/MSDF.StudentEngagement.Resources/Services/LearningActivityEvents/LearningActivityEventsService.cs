@@ -1,8 +1,7 @@
-﻿using MSDF.StudentEngagement.Persistence.Models;
-using MSDF.StudentEngagement.Persistence.StudentLearningEvent.Commands;
-using System;
+﻿using MSDF.StudentEngagement.Persistence.CommandsAndQueries.Commands;
+using MSDF.StudentEngagement.Persistence.CommandsAndQueries.Queries;
+using MSDF.StudentEngagement.Persistence.Models;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace MSDF.StudentEngagement.Resources.Services.LearningActivityEvents
@@ -14,16 +13,20 @@ namespace MSDF.StudentEngagement.Resources.Services.LearningActivityEvents
     public class LearningActivityEventsService : ILearningActivityEventsService
     {
         private readonly IStudentLearningEventLogCommands _studentLearningEventLogCommands;
+        private readonly ILearningAppQueries _learningAppQueries;
 
-        public LearningActivityEventsService(IStudentLearningEventLogCommands studentLearningEventLogCommands)
+        public LearningActivityEventsService(
+            IStudentLearningEventLogCommands studentLearningEventLogCommands,
+            ILearningAppQueries learningAppQueries)
         {
             this._studentLearningEventLogCommands = studentLearningEventLogCommands;
+            this._learningAppQueries = learningAppQueries;
         }
 
         public async Task SaveLearningActivityEventAsync(LearningActivityEventModel model)
         {
-            StudentLearningEventLog entity = MapToStudentLearningEventLog(model);
-
+            var learningApp = await _learningAppQueries.GetWhitelistedApp(model.LeaningAppUrl);
+            StudentLearningEventLog entity = MapToStudentLearningEventLog(model, learningApp);
             await _studentLearningEventLogCommands.AddAsync(entity);
         }
 
@@ -31,20 +34,27 @@ namespace MSDF.StudentEngagement.Resources.Services.LearningActivityEvents
         {
             foreach (var model in modelList)
             {
-                var entity = MapToStudentLearningEventLog(model);
+                var whitelistedApp = await _learningAppQueries.GetWhitelistedApp(model.LeaningAppUrl);
+                if (null == whitelistedApp) { continue; }
+                var entity = MapToStudentLearningEventLog(model, whitelistedApp);
                 await _studentLearningEventLogCommands.AddorUpdateAsync(entity);
             }
         }
 
-        private static StudentLearningEventLog MapToStudentLearningEventLog(LearningActivityEventModel model)
+        private static StudentLearningEventLog MapToStudentLearningEventLog(
+            LearningActivityEventModel model, 
+            Persistence.Models.LearningApp learningApp)
         {
+            if (null == learningApp) return null;
+
             // Map model to entity
             var entity = new StudentLearningEventLog
             {
                 StudentElectronicMailAddress = model.IdentityElectronicMailAddress,
                 LeaningAppUrl = model.LeaningAppUrl,
                 UTCStartDate = model.UTCStartDateTime,
-                UTCEndDate = model.UTCEndDateTime
+                UTCEndDate = model.UTCEndDateTime,
+                LearningAppIdentifier = learningApp.LearningAppIdentifier
                 // TODO: Add other properties as needed.
             };
             if (model.UTCEndDateTime != null) { entity.TimeSpent = (int?)(entity.UTCEndDate.Value - entity.UTCStartDate).TotalSeconds; }

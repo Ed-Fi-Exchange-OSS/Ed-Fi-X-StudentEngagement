@@ -77,14 +77,5 @@ namespace MSDF.StudentEngagement.Web.Controllers
             }
             catch (Exception ex) { return BadRequest("Invalid string"); }
         }
-
-        private bool IsInWhitelist(string url)
-        {
-            var whitelist = _configuration.GetSection("Whitelist").GetChildren().ToList()
-                .Select(app => new { app = app["app"], regex = app["regex"] })
-                .ToList();
-            return whitelist.Any(itm => Regex.IsMatch(url, itm.regex) );
-        }        
-
     }
 }

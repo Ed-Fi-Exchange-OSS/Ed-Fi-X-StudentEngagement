@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Numerics;
-using System.Text;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MSDF.StudentEngagement.Persistence.Models
 {
@@ -31,5 +29,11 @@ namespace MSDF.StudentEngagement.Persistence.Models
         public DateTime UTCStartDate { get; set; }
         public DateTime? UTCEndDate { get; set; }
         public int? TimeSpent { get; set; }
+
+        //LearningApp
+        public virtual LearningApp LearningApp { get; set; }
+        [StringLength(60)]
+        [ForeignKey("LearningApp")]
+        public string LearningAppIdentifier { get; set; }
     }
 }

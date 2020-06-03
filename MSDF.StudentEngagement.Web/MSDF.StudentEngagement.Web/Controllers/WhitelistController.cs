@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
+using MSDF.StudentEngagement.Persistence.CommandsAndQueries.Queries;
 using Newtonsoft.Json;
 
 namespace MSDF.StudentEngagement.Web.Controllers
@@ -13,19 +10,21 @@ namespace MSDF.StudentEngagement.Web.Controllers
     [ApiController]
     public class WhitelistController : ControllerBase
     {
-        private readonly IConfiguration _configuration;
+        private readonly ILearningAppQueries _learningAppQueries;
 
-        public WhitelistController(IConfiguration configuration)
+        public WhitelistController(ILearningAppQueries learningAppQueries)
         {
-            this._configuration = configuration;
+            this._learningAppQueries = learningAppQueries;
         }
+
         // GET: api/Whitelist
         [HttpGet]
-        public string Get()
+        public async Task<string> Get()
         {
-            var whitelist = _configuration.GetSection("Whitelist").GetChildren().ToList()
-                .Select(app => new { app = app["app"], regex = app["regex"] })
+            var whitelist = (await _learningAppQueries.GetAll())
+                .Select(la => new { app = la.LearningAppIdentifier, regex = la.WhitelistRegex })
                 .ToList();
+
             var whitelistJson = JsonConvert.SerializeObject(whitelist);
             return whitelistJson;
         }

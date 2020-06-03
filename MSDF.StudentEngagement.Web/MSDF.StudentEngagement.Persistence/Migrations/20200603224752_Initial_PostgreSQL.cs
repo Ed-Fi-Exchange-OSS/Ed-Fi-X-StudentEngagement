@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace MSDF.StudentEngagement.Persistence.Migrations
 {
-    public partial class Initial_PostGreSQL : Migration
+    public partial class Initial_PostgreSQL : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -16,7 +16,9 @@ namespace MSDF.StudentEngagement.Persistence.Migrations
                     Namespace = table.Column<string>(maxLength: 255, nullable: true),
                     Description = table.Column<string>(maxLength: 1024, nullable: true),
                     Website = table.Column<string>(maxLength: 255, nullable: true),
-                    AppUrl = table.Column<string>(maxLength: 255, nullable: true)
+                    AppUrl = table.Column<string>(maxLength: 255, nullable: true),
+                    WhitelistRegex = table.Column<string>(maxLength: 255, nullable: true),
+                    TrackingEnabled = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -86,20 +88,73 @@ namespace MSDF.StudentEngagement.Persistence.Migrations
                     LeaningAppUrl = table.Column<string>(maxLength: 1024, nullable: true),
                     UTCStartDate = table.Column<DateTime>(nullable: false),
                     UTCEndDate = table.Column<DateTime>(nullable: true),
-                    TimeSpent = table.Column<int>(nullable: true)
+                    TimeSpent = table.Column<int>(nullable: true),
+                    LearningAppIdentifier = table.Column<string>(maxLength: 60, nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_StudentLearningEventLog", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_StudentLearningEventLog_LearningApp_LearningAppIdentifier",
+                        column: x => x.LearningAppIdentifier,
+                        principalTable: "LearningApp",
+                        principalColumn: "LearningAppIdentifier",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.InsertData(
+                table: "LearningApp",
+                columns: new[] { "LearningAppIdentifier", "AppUrl", "Description", "Namespace", "TrackingEnabled", "Website", "WhitelistRegex" },
+                values: new object[] { "schoology", "schoology.com", null, null, true, null, "^.*\\.schoology.com\\/.*" });
 
-            SQL_CreateView(migrationBuilder);
+            migrationBuilder.CreateIndex(
+                name: "IX_StudentLearningEventLog_LearningAppIdentifier",
+                table: "StudentLearningEventLog",
+                column: "LearningAppIdentifier");
+
+
+            SQL_Create_View_StudentEngagementReport(migrationBuilder);
+            SQL_Create_VIEW_StudentEngagementReport_GroupType(migrationBuilder);
         }
 
-        private void SQL_CreateView(MigrationBuilder migrationBuilder)
+        private void SQL_Create_VIEW_StudentEngagementReport_GroupType(MigrationBuilder migrationBuilder)
         {
+            string query = @"
+CREATE OR REPLACE VIEW public.studentengagementreport_grouptype
+AS 
+SELECT 'School' AS grouptype, COALESCE(studentengagementreport.schoolname, 'NONE') AS groupvalue, * FROM studentengagementreport
+UNION
+SELECT 'Grade Level' AS grouptype, COALESCE(studentengagementreport.schoolcurrentgradeleveldescriptorcodevalue, 'NONE') AS groupvalue, * FROM studentengagementreport
+UNION
+SELECT 'Sex' AS grouptype, COALESCE(studentengagementreport.birthsexdescriptorcodevalue, 'NONE') AS groupvalue, * FROM studentengagementreport
+UNION
+SELECT 'Disability Status' AS grouptype, COALESCE(studentengagementreport.disabilitystatusdescriptorcodevalue, 'NONE') AS groupvalue, * FROM studentengagementreport
+UNION
+SELECT 'Economically Disadvantage' AS grouptype, COALESCE(studentengagementreport.economicallydisadvantagedescriptorcodevalue, 'NONE') AS groupvalue, * FROM studentengagementreport
+UNION
+SELECT 'ELL Status' AS grouptype, COALESCE(studentengagementreport.ellstatusdescriptorcodevalue, 'NONE') AS groupvalue, * FROM studentengagementreport
+UNION
+SELECT 'Homeless Descriptor' AS grouptype, COALESCE(studentengagementreport.homelessdescriptorcodevalue, 'NONE') AS groupvalue, * FROM studentengagementreport
+UNION
+SELECT 'Race' AS grouptype,
+        CASE
+            WHEN studentengagementreport.race_americanindianalaskannative = true THEN 'American Indian Alaskan Native'
+            WHEN studentengagementreport.race_asian = true THEN 'Asian'
+            WHEN studentengagementreport.race_blackafricaamerican = true THEN 'Black African-American'
+            WHEN studentengagementreport.race_nativehawaiianpacificislander = true THEN 'Native Hawaiian Pacific Islander'
+            WHEN studentengagementreport.race_white = true THEN 'White'
+            WHEN studentengagementreport.race_choosenottorespond = true THEN 'Choose Not To Respond'
+            WHEN studentengagementreport.race_other = true THEN 'Other'
+            ELSE '-'
+        END AS groupvalue
+    , *
+    FROM studentengagementreport;
+";
+            migrationBuilder.Sql(query);
+        }
 
+        private void SQL_Create_View_StudentEngagementReport(MigrationBuilder migrationBuilder)
+        {
             string query = @"
 CREATE OR REPLACE VIEW public.studentengagementreport
 AS SELECT st.""Id"" AS id,
@@ -120,7 +175,7 @@ AS SELECT st.""Id"" AS id,
     concat(st.""LastSurname"", ' ', st.""FirstName"", COALESCE(concat(' ', st.""MiddleName""), ''::text)) AS studentfullnamelfm,
     st.""BirthDate"" AS birthdate,
     st.""BirthSexDescriptorCodeValue"" AS birthsexdescriptorcodevalue,
-    st.""Ethnicity"",
+    st.""Ethnicity"" as ethnicity,
     st.""Race_AmericanIndianAlaskanNative"" AS race_americanindianalaskannative,
     st.""Race_Asian"" AS race_asian,
     st.""Race_BlackAfricaAmerican"" AS race_blackafricaamerican,
@@ -168,19 +223,19 @@ AS SELECT st.""Id"" AS id,
             ";
 
             migrationBuilder.Sql(query);
-
         }
+
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "LearningApp");
-
             migrationBuilder.DropTable(
                 name: "StudentInformation");
 
             migrationBuilder.DropTable(
                 name: "StudentLearningEventLog");
+
+            migrationBuilder.DropTable(
+                name: "LearningApp");
         }
     }
 }

@@ -1,11 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 using MSDF.StudentEngagement.Persistence.EntityFramework;
 using MSDF.StudentEngagement.Persistence.Models;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MSDF.StudentEngagement.Persistence.StudentLearningEvent.Commands
+namespace MSDF.StudentEngagement.Persistence.CommandsAndQueries.Commands
 {
     public interface IStudentLearningEventLogCommands
     {

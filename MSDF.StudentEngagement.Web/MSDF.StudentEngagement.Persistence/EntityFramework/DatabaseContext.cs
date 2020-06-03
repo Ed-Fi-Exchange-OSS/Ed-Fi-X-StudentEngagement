@@ -18,8 +18,23 @@ namespace MSDF.StudentEngagement.Persistence.EntityFramework
             modelBuilder.Entity<StudentLearningEventLog>().ToTable("StudentLearningEventLog");
             modelBuilder.Entity<StudentInformation>().ToTable("StudentInformation");
             modelBuilder.Entity<LearningApp>().ToTable("LearningApp");
+
+            SeedData(modelBuilder);
         }
 
-
+        private void SeedData(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<LearningApp>().HasData(
+                new LearningApp[] 
+                {
+                    new LearningApp()
+                    {
+                        LearningAppIdentifier = "schoology",
+                        AppUrl = "schoology.com",
+                        WhitelistRegex = @"^.*\.schoology.com\/.*",
+                        TrackingEnabled = true
+                    } 
+                });
+        }
     }
 }

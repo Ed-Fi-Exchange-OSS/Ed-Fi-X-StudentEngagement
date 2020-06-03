@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
 namespace MSDF.StudentEngagement.Persistence.Models
 {
@@ -20,5 +17,8 @@ namespace MSDF.StudentEngagement.Persistence.Models
         public string Website { get; set; }
         [StringLength(255)]
         public string AppUrl { get; set; }
+        [StringLength(255)]
+        public string WhitelistRegex { get; set; }
+        public bool TrackingEnabled { get; set; }        
     }
 }
