@@ -109,6 +109,18 @@ function HandleUpdate(tabId, changeInfo, tab) {
 }
 
 function HandleRemove(tabId, removeInfo) {
+  if (!WhitelistService.IsInWhiteList(url)) {
+    delete History[tabId];
+    return;
+  }
+
+  let usageData = [];
+  let data = GetUsageData(tabId, 0);
+  if (null != data) { 
+    data.UTCEndDateTime = new Date();
+    usageData.unshift(data) 
+  }
+  if (usageData.length > 0) { SendDataToServer(usageData); }
   delete History[tabId];
 }
 
