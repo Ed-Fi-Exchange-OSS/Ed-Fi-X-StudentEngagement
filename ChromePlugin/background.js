@@ -116,9 +116,9 @@ function HandleRemove(tabId, removeInfo) {
 
   let usageData = [];
   let data = GetUsageData(tabId, 0);
-  if (null != data) { 
+  if (null != data) {
     data.UTCEndDateTime = new Date();
-    usageData.unshift(data) 
+    usageData.unshift(data)
   }
   if (usageData.length > 0) { SendDataToServer(usageData); }
   delete History[tabId];
@@ -140,8 +140,15 @@ function UpdateBadges() {
   }
 }
 
-WhitelistService.SaveWhitelistFromAPI();
 
+chrome.alarms.create("UpdateWhiteList", { periodInMinutes: 30 });
+chrome.alarms.onAlarm.addListener(function (alarm) {
+  if (alarm && alarm.name == "UpdateWhiteList") {
+    WhitelistService.SaveWhitelistFromAPI();
+  }
+});
+
+WhitelistService.SaveWhitelistFromAPI();
 setInterval(UpdateBadges, 1000);
 
 chrome.tabs.onUpdated.addListener(HandleUpdate);

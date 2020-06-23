@@ -5,6 +5,7 @@
   "version": "0.1.1",
   "author": "MSDF Douglas Loyo, Emilio Baez, Xavier Lucatero (NearShoreDevs.com)",
   "permissions": [
+    "alarms",
     "tabs",
     "https://www.neltic.com/",
     "identity",
