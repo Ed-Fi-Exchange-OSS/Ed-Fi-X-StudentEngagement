@@ -83,7 +83,31 @@ We have provided a sample Google Data Studio report template. To be able to upda
 4. Enjoy
 
 
-## Production Release Notes (Coming soon).
+## Production Release Notes
+
+When deploying this solution to production it is necesarry that you consider the follwing needs:
+1. Infrastructure: This solution requires the installation of a .Net Core WebAPI application and a database to store the events. Both the web server or database server can be hosted in either physical, virtualized or cloud environments.
+2. Plugin deployment: This solution requires a Chrome plugin to be released in the Chrome store. We recommend this option as google will sign your plugin making security way better than deploying a developer level plugin that has not been packaged.
+
+High Level Architecture View
+
+### Production Setup 
+
+#### 1) Plugin
+
+#### 2) Infrastructure
+
+#### 3) Reporting
+We have created a denormalized StudentInformation table in the database that allows for ease of connecting any of the popular BI tools like:
+* Google Data Studio
+* PowerBi
+* Tableau
+* etc...
+
+In this solution we are providing a Google Data Studio template.
+Follow these setup instructions listed in the section above:
+[Configure Google Data Studio Report](#configure-google-data-studio-report)
+
 
 ## Contributing
 
