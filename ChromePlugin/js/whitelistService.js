@@ -9,6 +9,7 @@ var WhitelistService = {
                 var strWhitelist = xhr.responseText;
                 /* TODO: Check that the object is correct*/
                 localStorage.setItem(WHITELIST_KEY, strWhitelist)
+                setTimeout(this.SaveWhitelistFromAPI, 30 * 60000);
             } else {
                 console.error(xhr.statusText);
                 setTimeout(SaveWhitelistFromAPI, 5000)
