@@ -2,6 +2,7 @@
     "EncryptionKey":"4Pmra8SUSrgdU3z_rc-Pf1pQzCK9mdb-jaVc-9cSmCD",
     "TempPathForBinaryDownloads":"C:\\temp\\edfi\\StudentEngegement\\",
     "BinaryMetadata": {
+        "StudentETLExportQueryFile" : "sql\\StudentDataFromODSv250.sql",
         "ApiBinaries":{
             "Name": "API",
             "BinaryUrl":"http://www.toolwise.net/StudentEngagementAPI.zip",

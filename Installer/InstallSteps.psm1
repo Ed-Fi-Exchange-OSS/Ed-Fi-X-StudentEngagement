@@ -101,6 +101,23 @@ Function Install-Binaries($settings, $tempPathForBinaries) {
 
 }
 
+function Run-ETL() {
+    Import-Module "$PSScriptRoot\Config" -Force #-Verbose #-Force
+    $config = Get-ConfigurationParameters
+    #5) StudentInformation ETL
+    Write-HostStep "Step: Importing  StudentInformation"
+    $sourceConnStr = $config.BinaryMetadata.ApiBinaries.ConnectionString.EdFiODSConnectionString 
+    $destConnStr = $config.BinaryMetadata.ApiBinaries.ConnectionString.StudentLearningEventsConnectionString 
+    if ($sourceConnStr.Trim().Length -eq 0) {
+        Write-Warning "EdFiODSConnectionString is empty. Configure a connection string for the MSSQL EdFi database"
+    }
+    if ($destConnStr.Trim().Length -gt 0 -and $sourceConnStr.Trim().Length -gt 0) {
+        $exportQueryFile = $config.BinaryMetadata.StudentETLExportQueryFile
+        $exportQuery = Get-Content $exportQueryFile -Raw 
+
+        Import-StudentInfo $sourceConnStr $destConnStr $exportQuery
+    }
+}
 
 # All Install Options go here
 Function Install-StudentEngagementTracker() {
@@ -144,14 +161,7 @@ Function Install-StudentEngagementTracker() {
     Set-AppSettingsJsonFile $appSettingsPath $config
 
     #5) StudentInformation ETL
-    Write-HostStep "Step: Importing  StudentInformation"
-    $sourceConnStr = $config.BinaryMetadata.ApiBinaries.ConnectionString.EdFiODSConnectionString 
-    if ($sourceConnStr.Trim().Length -eq 0) {
-        Write-Warning "EdFiODSConnectionString is empty. Configure a connection string for the MSSQL EdFi database"
-    }
-    if ($destConnStr.Trim().Length -gt 0 -and $sourceConnStr.Trim().Length -gt 0) {
-        Import-StudentInfo $sourceConnStr $destConnStr
-    }
+    Run-ETL
 
     #6) Install extension
     Write-HostStep "Step: Adding Chrome extension "
