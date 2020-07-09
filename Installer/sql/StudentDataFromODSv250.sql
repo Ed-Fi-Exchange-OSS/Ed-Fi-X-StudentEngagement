@@ -1,12 +1,12 @@
-DECLARE @tableName as varchar(50) = 'public.""StudentInformation""'
+DECLARE @tableName as varchar(50) = 'public."StudentInformation"'
     Select
         'Insert into ' + @tableName + ' (
-            ""StudentUSI"", ""StudentUniqueId"", ""StudentStateIdentificationCode"", ""IdentityElectronicMailAddress"", ""DeviceId""
-            , ""LocalEducationAgencyName"", ""SchoolName"", ""SchoolYear"", ""SchoolCurrentGradeLevelDescriptorCodeValue"", ""SchoolTypeDescriptorCodeValue"", ""ExitWithdrawalDate""
-            , ""FirstName"", ""MiddleName"", ""LastSurname"", ""BirthDate"", ""BirthSexDescriptorCodeValue""
-            , ""Ethnicity"", ""Race_AmericanIndianAlaskanNative"", ""Race_Asian"", ""Race_BlackAfricaAmerican"", ""Race_NativeHawaiianPacificIslander"", ""Race_White"", ""Race_ChooseNotToRespond"", ""Race_Other""
-            , ""DisabilityStatusDescriptorCodeValue"", ""EconomicallyDisadvantageDescriptorCodeValue"", ""ELLStatusDescriptorCodeValue"", ""MigrantDescriptorCodeValue"", ""HomelessDescriptorCodeValue"", ""FosterDescriptorCodeValue"", ""F504DescriptorCodeValue""
-            , ""ContactInfoLastSurname"", ""ContactInfoFirstName"", ""ContactInfoRelationToStudent"", ""ContactInfoCellPhoneNumber"", ""ContactInfoElectronicMailAddress""
+            "StudentUSI", "StudentUniqueId", "StudentStateIdentificationCode", "IdentityElectronicMailAddress", "DeviceId"
+            , "LocalEducationAgencyName", "SchoolName", "SchoolYear", "SchoolCurrentGradeLevelDescriptorCodeValue", "SchoolTypeDescriptorCodeValue", "ExitWithdrawalDate"
+            , "FirstName", "MiddleName", "LastSurname", "BirthDate", "BirthSexDescriptorCodeValue"
+            , "Ethnicity", "Race_AmericanIndianAlaskanNative", "Race_Asian", "Race_BlackAfricaAmerican", "Race_NativeHawaiianPacificIslander", "Race_White", "Race_ChooseNotToRespond", "Race_Other"
+            , "DisabilityStatusDescriptorCodeValue", "EconomicallyDisadvantageDescriptorCodeValue", "ELLStatusDescriptorCodeValue", "MigrantDescriptorCodeValue", "HomelessDescriptorCodeValue", "FosterDescriptorCodeValue", "F504DescriptorCodeValue"
+            , "ContactInfoLastSurname", "ContactInfoFirstName", "ContactInfoRelationToStudent", "ContactInfoCellPhoneNumber", "ContactInfoElectronicMailAddress"
             ) Values '  as cmd
     
     Union ALL
@@ -81,8 +81,8 @@ DECLARE @tableName as varchar(50) = 'public.""StudentInformation""'
 					, Case When [6] = 1 Then 'TRUE' else 'FALSE' End AS Race_Other
 					, Case When [7] = 1 Then 'TRUE' else 'FALSE' End AS Race_White
 					from (select StudentUSI, sr.RaceTypeId, CodeValue
-						from [v250_EdFi_Ods_Populated_Template].[edfi].[StudentRace] as sr 
-						inner join [v250_EdFi_Ods_Populated_Template].[edfi].RaceType rt on sr.RaceTypeId = rt.RaceTypeId) as source
+						from [edfi].[StudentRace] as sr 
+						inner join [edfi].RaceType rt on sr.RaceTypeId = rt.RaceTypeId) as source
 					PIVOT  
 					(  
 					Count(CodeValue)  

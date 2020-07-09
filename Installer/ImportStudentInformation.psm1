@@ -4,7 +4,6 @@ Import-Module "$PSScriptRoot\Prettify" -Force
 
 function Test-HasLogDataStructures($conn) {
     # Check if studentinformation table exists
-    $database = $conn.Database
     $queryStudentInformation = "Select Count(*) as N From information_schema.tables WHERE upper(table_name) = upper('StudentInformation');"
     $rowCount = Get-QueryScalar $queryStudentInformation $conn
 
@@ -12,7 +11,6 @@ function Test-HasLogDataStructures($conn) {
 }
 
 function Get-StudentInfoRowCount($conn) {
-    $database = $conn.Database    
     $query = "Select Count(*) From ""StudentInformation"""
     return Get-QueryScalar $query $conn
 }
@@ -42,7 +40,7 @@ function Import-StudentInfo($sourceConnStr, $destConnStr, $exportQuery) {
         $dConn = Get-PostGreSQLConnection $destConnStr
         Write-Host "Connected to Destination"
         $sConn = get-MSSQLConnection $sourceConnStr
-        Write-Host "Connected to Sourse"
+        Write-Host "Connected to Source"
 
         $testDS = Test-HasLogDataStructures $dConn
         if (-not $testDS ) {    
@@ -62,8 +60,8 @@ function Import-StudentInfo($sourceConnStr, $destConnStr, $exportQuery) {
         Write-Host "* Destination StudentInformation is empty"
 
         Write-Host "* Exporting data from source"
-        $rStInfo = Get-QueryReader $exportQuery $conn
-    
+        $rStInfo = Get-QueryReader $exportQuery $sConn
+
         Write-Host "* Importinging data into destination, please wait"
         $null = Write-StudentInfo $dConn $rStInfo
 

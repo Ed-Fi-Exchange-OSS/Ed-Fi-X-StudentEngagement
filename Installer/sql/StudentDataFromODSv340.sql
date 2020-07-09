@@ -1,12 +1,12 @@
-DECLARE @tableName as varchar(50) = 'public.""StudentInformation""'
+DECLARE @tableName as varchar(50) = 'public."StudentInformation"'
     Select
         'Insert into ' + @tableName + ' (
-            ""StudentUSI"", ""StudentUniqueId"", ""StudentStateIdentificationCode"", ""IdentityElectronicMailAddress"", ""DeviceId""
-            , ""LocalEducationAgencyName"", ""SchoolName"", ""SchoolYear"", ""SchoolCurrentGradeLevelDescriptorCodeValue"", ""SchoolTypeDescriptorCodeValue"", ""ExitWithdrawalDate""
-            , ""FirstName"", ""MiddleName"", ""LastSurname"", ""BirthDate"", ""BirthSexDescriptorCodeValue""
-            , ""Ethnicity"", ""Race_AmericanIndianAlaskanNative"", ""Race_Asian"", ""Race_BlackAfricaAmerican"", ""Race_NativeHawaiianPacificIslander"", ""Race_White"", ""Race_ChooseNotToRespond"", ""Race_Other""
-            , ""DisabilityStatusDescriptorCodeValue"", ""EconomicallyDisadvantageDescriptorCodeValue"", ""ELLStatusDescriptorCodeValue"", ""MigrantDescriptorCodeValue"", ""HomelessDescriptorCodeValue"", ""FosterDescriptorCodeValue"", ""F504DescriptorCodeValue""
-            , ""ContactInfoLastSurname"", ""ContactInfoFirstName"", ""ContactInfoRelationToStudent"", ""ContactInfoCellPhoneNumber"", ""ContactInfoElectronicMailAddress""
+            "StudentUSI", "StudentUniqueId", "StudentStateIdentificationCode", "IdentityElectronicMailAddress", "DeviceId"
+            , "LocalEducationAgencyName", "SchoolName", "SchoolYear", "SchoolCurrentGradeLevelDescriptorCodeValue", "SchoolTypeDescriptorCodeValue", "ExitWithdrawalDate"
+            , "FirstName", "MiddleName", "LastSurname", "BirthDate", "BirthSexDescriptorCodeValue"
+            , "Ethnicity", "Race_AmericanIndianAlaskanNative", "Race_Asian", "Race_BlackAfricaAmerican", "Race_NativeHawaiianPacificIslander", "Race_White", "Race_ChooseNotToRespond", "Race_Other"
+            , "DisabilityStatusDescriptorCodeValue", "EconomicallyDisadvantageDescriptorCodeValue", "ELLStatusDescriptorCodeValue", "MigrantDescriptorCodeValue", "HomelessDescriptorCodeValue", "FosterDescriptorCodeValue", "F504DescriptorCodeValue"
+            , "ContactInfoLastSurname", "ContactInfoFirstName", "ContactInfoRelationToStudent", "ContactInfoCellPhoneNumber", "ContactInfoElectronicMailAddress"
             ) Values '  as cmd
     
     Union ALL
