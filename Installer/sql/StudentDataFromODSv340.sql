@@ -11,19 +11,19 @@ DECLARE @tableName as varchar(50) = 'public."StudentInformation"'
     
     Union ALL
     
-    Select '('  
-            + Cast (StudentUSI as VarChar(10) ) + ',''' + StudentUniqueId + ''',NULL,''' + ElectronicMailAddress  + ''',NULL' 
-            + ',''' + LocalEducationAgencyName + ''',''' + SchoolName + ''', 2020, ''' + EntryGradeLevelDescriptorCodeValue  + ''',''' + 'TODO SchoolTypeDescriptorCodeValue' + ''',' + IsNull('''' + Convert(varchar(100), ExitWithdrawDate, 120 ) + '''', 'NULL') 
-            + ',''' + FirstName + ''',' + IsNull('''' + MiddleName + '''','NULL') + ',''' + LastSurname + ''',''' + Convert(varchar(100), BirthDate, 120 ) + ''',''' + SexDescriptorCodeValue + '''' 
-            + ',''' + Ethnicity + ''',' + Cast(Race_AmericanIndianAlaskanNative as varchar(5))  + ',' + Cast(Race_Asian as varchar(5)) + ',' + Cast(Race_BlackAfricanAmerican as varchar(5)) + ',' + Cast(Race_NativeHawaiianPacificIslander as varchar(5)) + ',' + Cast(Race_White as varchar(5)) + ',' + Cast(Race_ChooseNotToRespond as varchar(5)) + ',' + Cast(Race_Other as varchar(5))
-            + ', NULL, NULL, ' + IsNull('''' + LimitedEnglishProficiency + '''', 'NULL') + ',' + IsNull('''' + MigrantDescriptorCodeValue + '''', 'NULL') + ',' + IsNull('''' + HomelessDescriptorCodeValue + '''', 'NULL') + ', NULL,' + IsNull('''' + F504DescriptorCodeValue + '''', 'NULL') 
-            + ',' + IsNull('''' + ContactInfoLastSurname + '''', 'NULL') + ','  + IsNull('''' + ContactInfoFirstName + '''', 'NULL') + ','  + IsNull('''' + ContactInfoRelationToStudent + '''', 'NULL') + ','  + IsNull('''' + ContactInfoCellPhoneNumber + '''', 'NULL') + ','  + IsNull('''' + ContactInfoElectronicMailAddress + '''', 'NULL') 
-            + ')' as cmd
+    Select Concat('(' 
+            , IsNull(StudentUSI, 'NULL'), ',', IsNull('''' + StudentUniqueId + '''', 'NULL'),',', 'NULL,',IsNull('''' + ElectronicMailAddress  + '''', 'NULL'),',NULL,'
+			, IsNull('''' + LocalEducationAgencyName + '''' , 'NULL'), ',', IsNull('''' + SchoolName + '''', 'NULL'), ', 2020,', IsNull('''' + EntryGradeLevelDescriptorCodeValue  + '''' , 'NULL'), ',''TODO SchoolTypeDescriptorCodeValue'',', IsNull('''' + Convert(varchar(100), ExitWithdrawDate, 120 ) + '''', 'NULL'), ',' 
+			, IsNull('''' + FirstName + '''' ,'NULL'), ',', IsNull('''' + MiddleName + '''' ,'NULL'), ',', IsNull('''' + LastSurname + '''' ,'NULL'), ',', IsNull('''' + Convert(varchar(100), BirthDate, 120 ) + '''','NULL'),',', IsNull('''' + SexDescriptorCodeValue + '''' ,'NULL'), ',' 
+			, IsNull(''''+ Ethnicity + '''','NULL'), ',', IsNull(''''+ Race_AmericanIndianAlaskanNative + '''','NULL'), ',', IsNull(''''+ Race_Asian + '''','NULL'), ',', IsNull(''''+ Race_BlackAfricanAmerican + '''','NULL'), ',', IsNull(''''+ Race_NativeHawaiianPacificIslander + '''','NULL'), ',', IsNull(''''+ Race_White + '''','NULL'), ',', IsNull(''''+ Race_ChooseNotToRespond + '''','NULL'), ',', IsNull(''''+ Race_Other + '''','NULL'), ','
+			, 'NULL,NULL,', IsNull('''' + LimitedEnglishProficiency + '''', 'NULL'), ',', IsNull('''' + MigrantDescriptorCodeValue + '''', 'NULL'), ',', IsNull('''' + HomelessDescriptorCodeValue + '''', 'NULL'), ', NULL,', IsNull('''' + F504DescriptorCodeValue + '''', 'NULL'), ','
+            , IsNull('''' + ContactInfoLastSurname + '''', 'NULL'), ',', IsNull('''' + ContactInfoFirstName + '''', 'NULL'), ',', IsNull('''' + ContactInfoRelationToStudent + '''', 'NULL'), ',', IsNull('''' + ContactInfoCellPhoneNumber + '''', 'NULL'), ',', IsNull('''' + ContactInfoElectronicMailAddress + '''', 'NULL') 
+            , ')') as cmd
         From (
             SELECT
-                RowNumber = ROW_NUMBER() over (order by s.StudentUSI)
+                --RowNumber = ROW_NUMBER() over (order by s.StudentUSI)
                 -- Basic identity and demogs
-                , s.StudentUSI, s.StudentUniqueId, s.FirstName, s.MiddleName, s.LastSurname, BirthDate
+                s.StudentUSI, s.StudentUniqueId, s.FirstName, s.MiddleName, s.LastSurname, BirthDate
                 , sd.CodeValue SexDescriptorCodeValue
                 , seoaem.ElectronicMailAddress, ed.CodeValue EmailType
                 , eo.NameOfInstitution LocalEducationAgencyName, so.NameOfInstitution SchoolName, ssa.EntryDate, gld.CodeValue EntryGradeLevelDescriptorCodeValue, ssa.ExitWithdrawDate

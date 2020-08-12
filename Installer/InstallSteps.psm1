@@ -112,6 +112,7 @@ function Run-ETL() {
         Write-Warning "EdFiODSConnectionString is empty. Configure a connection string for the MSSQL EdFi database"
     }
     if ($destConnStr.Trim().Length -gt 0 -and $sourceConnStr.Trim().Length -gt 0) {
+        Write-Host "Loading " $config.BinaryMetadata.StudentETLExportQueryFile
         $exportQueryFile = $config.BinaryMetadata.StudentETLExportQueryFile
         $exportQuery = Get-Content $exportQueryFile -Raw 
 

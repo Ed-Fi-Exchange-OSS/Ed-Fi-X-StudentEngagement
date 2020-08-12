@@ -11,19 +11,19 @@ DECLARE @tableName as varchar(50) = 'public."StudentInformation"'
     
     Union ALL
     
-    Select '('  
-            + Cast (StudentUSI as VarChar(10) ) + ',''' + StudentUniqueId + ''',NULL,''' + ElectronicMailAddress  + ''',NULL' 
-            + ',''' + LocalEducationAgencyName + ''',''' + SchoolName + ''', 2020, ''' + EntryGradeLevelDescriptorCodeValue  + ''',''' + 'TODO SchoolTypeDescriptorCodeValue' + ''',' + IsNull('''' + Convert(varchar(100), ExitWithdrawDate, 120 ) + '''', 'NULL') 
-            + ',''' + FirstName + ''',' + IsNull('''' + MiddleName + '''','NULL') + ',''' + LastSurname + ''',''' + Convert(varchar(100), BirthDate, 120 ) + ''',''' + SexDescriptorCodeValue + '''' 
-            + ',''' + Ethnicity + ''',' + Cast(Race_AmericanIndianAlaskanNative as varchar(5))  + ',' + Cast(Race_Asian as varchar(5)) + ',' + Cast(Race_BlackAfricanAmerican as varchar(5)) + ',' + Cast(Race_NativeHawaiianPacificIslander as varchar(5)) + ',' + Cast(Race_White as varchar(5)) + ',' + Cast(Race_ChooseNotToRespond as varchar(5)) + ',' + Cast(Race_Other as varchar(5))
-            + ', NULL, NULL, ' + IsNull('''' + LimitedEnglishProficiency + '''', 'NULL') + ',' + IsNull('''' + MigrantDescriptorCodeValue + '''', 'NULL') + ',' + IsNull('''' + HomelessDescriptorCodeValue + '''', 'NULL') + ', NULL,' + IsNull('''' + F504DescriptorCodeValue + '''', 'NULL') 
-            + ',' + IsNull('''' + ContactInfoLastSurname + '''', 'NULL') + ','  + IsNull('''' + ContactInfoFirstName + '''', 'NULL') + ','  + IsNull('''' + ContactInfoRelationToStudent + '''', 'NULL') + ','  + IsNull('''' + ContactInfoCellPhoneNumber + '''', 'NULL') + ','  + IsNull('''' + ContactInfoElectronicMailAddress + '''', 'NULL') 
-            + ')' as cmd
+    Select Concat('(' 
+            , IsNull(StudentUSI, 'NULL'), ',', IsNull('''' + StudentUniqueId + '''', 'NULL'),',', 'NULL,',IsNull('''' + ElectronicMailAddress  + '''', 'NULL'),',NULL,'
+			, IsNull('''' + LocalEducationAgencyName + '''' , 'NULL'), ',', IsNull('''' + SchoolName + '''', 'NULL'), ', 2020,', IsNull('''' + EntryGradeLevelDescriptorCodeValue  + '''' , 'NULL'), ',''TODO SchoolTypeDescriptorCodeValue'',', IsNull('''' + Convert(varchar(100), ExitWithdrawDate, 120 ) + '''', 'NULL'), ',' 
+			, IsNull('''' + FirstName + '''' ,'NULL'), ',', IsNull('''' + MiddleName + '''' ,'NULL'), ',', IsNull('''' + LastSurname + '''' ,'NULL'), ',', IsNull('''' + Convert(varchar(100), BirthDate, 120 ) + '''','NULL'),',', IsNull('''' + SexDescriptorCodeValue + '''' ,'NULL'), ','
+			, IsNull(''''+ Ethnicity + '''','NULL'), ',', IsNull(''''+ Race_AmericanIndianAlaskanNative + '''','NULL'), ',', IsNull(''''+ Race_Asian + '''','NULL'), ',', IsNull(''''+ Race_BlackAfricanAmerican + '''','NULL'), ',', IsNull(''''+ Race_NativeHawaiianPacificIslander + '''','NULL'), ',', IsNull(''''+ Race_White + '''','NULL'), ',', IsNull(''''+ Race_ChooseNotToRespond + '''','NULL'), ',', IsNull(''''+ Race_Other + '''','NULL'), ','
+			, 'NULL,NULL,', IsNull('''' + LimitedEnglishProficiency + '''', 'NULL'), ',', IsNull('''' + MigrantDescriptorCodeValue + '''', 'NULL'), ',', IsNull('''' + HomelessDescriptorCodeValue + '''', 'NULL'), ', NULL,', IsNull('''' + F504DescriptorCodeValue + '''', 'NULL'), ','
+            , IsNull('''' + ContactInfoLastSurname + '''', 'NULL'), ',', IsNull('''' + ContactInfoFirstName + '''', 'NULL'), ',', IsNull('''' + ContactInfoRelationToStudent + '''', 'NULL'), ',', IsNull('''' + ContactInfoCellPhoneNumber + '''', 'NULL'), ',', IsNull('''' + ContactInfoElectronicMailAddress + '''', 'NULL') 
+            , ')') as cmd
         From (
             SELECT
-                RowNumber = ROW_NUMBER() over (order by s.StudentUSI)
+                --RowNumber = ROW_NUMBER() over (order by s.StudentUSI)
                 -- Basic identity and demogs
-                , s.StudentUSI, s.StudentUniqueId, s.FirstName, s.MiddleName, s.LastSurname, BirthDate
+                 s.StudentUSI, s.StudentUniqueId, s.FirstName, s.MiddleName, s.LastSurname, BirthDate
                 , sxt.CodeValue SexDescriptorCodeValue
                 , seoaem.ElectronicMailAddress, emt.CodeValue EmailType
                 , eo.NameOfInstitution LocalEducationAgencyName, so.NameOfInstitution SchoolName, ssa.EntryDate, gld.CodeValue EntryGradeLevelDescriptorCodeValue, ssa.ExitWithdrawDate
@@ -39,24 +39,25 @@ DECLARE @tableName as varchar(50) = 'public."StudentInformation"'
     
                 -- Programs and Indicators (find by SELECT CodeValue from edfi.Descriptor WHERE Namespace like '%ProgramType%')
                 , lep.CodeValue LimitedEnglishProficiency
+
                 , (SELECT distinct 'Homeless' from [edfi].[StudentCharacteristic] gspa
 					inner join [edfi].[StudentCharacteristicDescriptor] schd on gspa.StudentCharacteristicDescriptorId = schd.StudentCharacteristicDescriptorId
 					inner join [edfi].[StudentCharacteristicType] scht on schd.StudentCharacteristicTypeId = scht.StudentCharacteristicTypeId
-                    WHERE scht.CodeValue like '%Homeless%') HomelessDescriptorCodeValue
+                    WHERE gspa.StudentUSI = s.StudentUSI and scht.CodeValue like '%Homeless%') HomelessDescriptorCodeValue
                 , (SELECT distinct 'Migrant' from [edfi].[StudentCharacteristic] gspa
 					inner join [edfi].[StudentCharacteristicDescriptor] schd on gspa.StudentCharacteristicDescriptorId = schd.StudentCharacteristicDescriptorId
 					inner join [edfi].[StudentCharacteristicType] scht on schd.StudentCharacteristicTypeId = scht.StudentCharacteristicTypeId
-                    WHERE scht.CodeValue like '%Migrant%') MigrantDescriptorCodeValue
+                    WHERE gspa.StudentUSI = s.StudentUSI and scht.CodeValue like '%Migrant%') MigrantDescriptorCodeValue
                 , (SELECT distinct '504' from [edfi].[StudentCharacteristic] gspa
 					inner join [edfi].[StudentCharacteristicDescriptor] schd on gspa.StudentCharacteristicDescriptorId = schd.StudentCharacteristicDescriptorId
 					inner join [edfi].[StudentCharacteristicType] scht on schd.StudentCharacteristicTypeId = scht.StudentCharacteristicTypeId
-                    WHERE scht.CodeValue like '%504%') F504DescriptorCodeValue                
-    
+                    WHERE gspa.StudentUSI = s.StudentUSI and scht.CodeValue like '%504%') F504DescriptorCodeValue
+
                 -- Contact info
-                , p.LastSurname as ContactInfoLastSurname, p.FirstName as ContactInfoFirstName
-                , relt.CodeValue as ContactInfoRelationToStudent
-                , pt.TelephoneNumber as ContactInfoCellPhoneNumber
-                , pe.ElectronicMailAddress as ContactInfoElectronicMailAddress
+                , ci.ContactInfoLastSurname, ci.ContactInfoFirstName
+                , ci.ContactInfoRelationToStudent
+                , ci.ContactInfoCellPhoneNumber
+                , ci.ContactInfoElectronicMailAddress
                 From edfi.Student s
                 -- Demogs reported at the district level
                 INNER JOIN edfi.StudentSchoolAssociation seoa on s.StudentUSI = seoa.StudentUSI				
@@ -90,9 +91,17 @@ DECLARE @tableName as varchar(50) = 'public."StudentInformation"'
 					) AS PivotTable
 				) as sr on s.StudentUSI = sr.StudentUSI
                 -- Contact Info
-                LEFT JOIN edfi.StudentParentAssociation spa ON s.StudentUSI = spa.StudentUSI and PrimaryContactStatus = 1
-                    LEFT JOIN edfi.Parent p ON spa.ParentUSI = p.ParentUSI
-                        LEFT JOIN edfi.ParentTelephone pt ON p.ParentUSI = pt.ParentUSI and pt.OrderOfPriority = 1
-                        LEFT JOIN (Select *, RANK() over(Partition by ParentUSI order by ElectronicMailTypeId) as R from edfi.ParentElectronicMail) pe ON p.ParentUSI = pe.ParentUSI and pe.R = 1
-                    LEFT JOIN edfi.RelationType relt on spa.RelationTypeId = relt.RelationTypeId
+				LEFT JOIN (
+					Select Rank() Over (Partition by spa.StudentUSI Order by p.ParentUSI, ElectronicMailTypeId) as R
+					, spa.StudentUSI, PrimaryContactStatus
+					, p.LastSurname AS ContactInfoLastSurname, p.FirstName AS ContactInfoFirstName
+					, relt.CodeValue AS ContactInfoRelationToStudent
+					, pt.TelephoneNumber AS ContactInfoCellPhoneNumber, pe.ElectronicMailAddress AS ContactInfoElectronicMailAddress
+					FROM edfi.StudentParentAssociation spa 
+					LEFT JOIN edfi.Parent p ON spa.ParentUSI = p.ParentUSI
+						LEFT JOIN edfi.ParentTelephone pt ON p.ParentUSI = pt.ParentUSI and pt.OrderOfPriority = 1
+						LEFT JOIN edfi.ParentElectronicMail pe ON p.ParentUSI = pe.ParentUSI 
+					LEFT JOIN edfi.RelationType relt on spa.RelationTypeId = relt.RelationTypeId
+					WHERE PrimaryContactStatus = 1 
+				) as ci ON s.StudentUSI = ci.StudentUSI and ci.R = 1
         ) as Data
